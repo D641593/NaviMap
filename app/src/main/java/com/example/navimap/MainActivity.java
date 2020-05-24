@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -88,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //換頁
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,EditPage.class);
+                startActivity(intent);
             }
         });
 

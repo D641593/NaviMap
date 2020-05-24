@@ -15,4 +15,8 @@
     <string name="cancel">取消</string>
     <string name="newMarker">新增標記點</string>
     <string name="titleHint">Title</string>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="edit">Edit</string>
+    <string name="google_map"><![CDATA[< Google Map]]></string>
 </resources>
