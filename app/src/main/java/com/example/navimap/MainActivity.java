@@ -110,18 +110,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String location = searchView.getQuery().toString();
                 List<Address> addressList = null;
 
-                if (location !=null || ! location.equals("")){
+                if (location !=null || !location.equals("")){
                     Geocoder geocoder = new Geocoder(MainActivity.this);
                     try {
                         addressList = geocoder.getFromLocationName(location,1);
-
+                        Address address = addressList.get(0);
+                        LatLng latLng =  new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } ;
-                    Address address = addressList.get(0);
-                    LatLng latLng =  new LatLng(address.getLatitude(), address.getLongitude());
-//                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                    }
+                    finally{
+                        Toast.makeText(getApplicationContext(),"找不到位置",Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
                 }
                 return false;
             }

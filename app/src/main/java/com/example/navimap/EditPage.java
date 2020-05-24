@@ -65,6 +65,16 @@ public class EditPage extends AppCompatActivity{
                 // 将创建的菜单项添加进菜单中
                 menu.addMenuItem(openItem);
 
+                // 创建“打开”项
+                SwipeMenuItem openforget = new SwipeMenuItem(getApplicationContext());
+                openforget.setBackground(new ColorDrawable(Color.rgb(0xA5, 0xC9, 0xCE)));
+                openforget.setWidth(dp2px(90));
+                openforget.setTitle("Note");
+                openforget.setTitleSize(18);
+                openforget.setTitleColor(Color.WHITE);
+                // 将创建的菜单项添加进菜单中
+                menu.addMenuItem(openforget);
+
                 // 创建“删除”项
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
@@ -99,11 +109,15 @@ public class EditPage extends AppCompatActivity{
                         open(item);
                         break;
                     case 1:
+                        NoteOpen(item);
+                        break;
+                    case 2:
                         // delete
-                        deleteDB(item);
+//                        deleteDB(item);
                         markerList.remove(position);
                         //通知监听者数据集发生改变，更新ListView界面
-                        mAdapter.notifyDataSetChanged();
+                        mListView.setAdapter(mAdapter);
+
                         break;
                 }
                 // true：其他已打开的列表项的菜单状态将保持原样，不会受到其他列表项的影响而自动收回
@@ -138,6 +152,15 @@ public class EditPage extends AppCompatActivity{
     }
 
     private void open(String item) {
+//        Intent intent = new Intent();
+//        intent.setClass(EditPage.this, game.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("Name",item);
+//        intent.putExtras(bundle);
+//        startActivity(intent);
+    }
+
+    private void NoteOpen(String name){
 //        Intent intent = new Intent();
 //        intent.setClass(EditPage.this, game.class);
 //        Bundle bundle = new Bundle();
