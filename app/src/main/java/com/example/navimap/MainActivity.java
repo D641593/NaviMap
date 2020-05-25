@@ -235,6 +235,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void shortDistance(){
+        SQLiteDatabase db = DB.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
+        while (c != null){
+            c.moveToFirst();
+            lati = c.getDouble(2);
+            longi = c.getDouble(3);
+            System.out.println(longi+ "\n" + lati);
+        }
+        c.close();
+        db.close();
 
     }
 
