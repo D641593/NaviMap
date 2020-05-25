@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Spinner unit;
     private AlertDialog.Builder add_calendar_dialog;
 
+//    GPS定位
+    private LocationManager locationMgr;
+    private String provider;
+    public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 11;
+
     private int menuLength;
     private NavigationView navigationView;
     private boolean writable = false;
@@ -82,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double lati,longi;
     private int dbID;
     private ImageButton btn_edit;
+    private ImageButton btn_search;
     private int id;
     private SearchView searchView;
 
@@ -102,6 +109,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this,EditPage.class);
                 startActivity(intent);
+            }
+        });
+        btn_search = findViewById(R.id.search);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -329,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 Calendar beginTime = Calendar.getInstance();
                                 beginTime.set(y, m - 1, d, h, minute);
-                                
+
                                 switch (unit.getSelectedItemPosition()){
                                     case 0:
                                         y += monment;

@@ -33,6 +33,18 @@
             android:src="@drawable/ic_marker_edit"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"/>
+        <ImageButton
+            android:layout_width="@dimen/FABsize"
+            android:layout_height="@dimen/FABsize"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="@dimen/down_margin"
+            android:id="@+id/search"
+            android:layout_marginBottom="@dimen/down_margin"
+            android:backgroundTint="@color/cardview_light_background"
+            android:background="@mipmap/ic_launcher_round"
+            android:src="@drawable/ic_search_distance"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
 
 
     </com.google.android.material.navigation.NavigationView>
