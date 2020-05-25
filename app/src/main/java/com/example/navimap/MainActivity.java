@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String deleteTmp;
     private int deleteID;
     private tinyDB DB;
+    private noteDB notedb;
     private String dbTitle = "";
     private double lati,longi;
     private int dbID;
@@ -101,7 +102,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchView = findViewById(R.id.sv_location);
 
         DB = new tinyDB(this);
-        DBshow();
+        DB.onCreate(DB.getWritableDatabase());
+        notedb = new noteDB(this);
+        notedb.onCreate(notedb.getWritableDatabase());
+
+        //DBshow();
         btn_edit = findViewById(R.id.edit);
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -460,8 +465,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void DBdelete(String title){
         SQLiteDatabase db = DB.getWritableDatabase();
+        SQLiteDatabase ndb = notedb.getWritableDatabase();
         db.delete(DB.getTableName(),"_title = '"+title + "';",null);
+        ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
         db.close();
+        ndb.close();
+        DBshow();
+
     }
 
     private int DBsearch(String title){
@@ -492,18 +502,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void DBshow(){
         SQLiteDatabase db = DB.getWritableDatabase();
+        SQLiteDatabase ndb = notedb.getWritableDatabase();
         Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
-        if (c == null){
+        Cursor nc = ndb.rawQuery("select * from " + notedb.getTableName() + ";",null);
+        if (c == null || nc == null){
             System.out.println("C is null pointer");
         }
         c.moveToFirst();
+        nc.moveToFirst();
         System.out.println("DataBase List");
         while (!c.isAfterLast()){
             System.out.println("title is " + c.getString(1));
             c.moveToNext();
         }
+        while (!nc.isAfterLast()){
+            System.out.println("title is " + nc.getString(1));
+            System.out.println("content is " + nc.getString(2));
+            nc.moveToNext();
+        }
         c.close();
+        nc.close();
         db.close();
+        ndb.close();
     }
 
     private void initInfoWindowsClick(GoogleMap googleMap) {
@@ -589,7 +609,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if(delete){
             Menu m = navigationView.getMenu();
-            System.out.println("deleteID is " + deleteID);
             m.removeItem(deleteID);
             delete = true;
         }
