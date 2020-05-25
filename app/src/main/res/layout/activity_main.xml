@@ -27,12 +27,24 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/down_margin"
             android:id="@+id/edit"
-            android:layout_marginBottom="@dimen/down_margin"
             android:backgroundTint="@color/cardview_light_background"
             android:background="@mipmap/ic_launcher_round"
             android:src="@drawable/ic_marker_edit"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"/>
+        <ImageButton
+            android:layout_width="@dimen/FABsize"
+            android:layout_height="@dimen/FABsize"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/down_margin"
+            android:id="@+id/mostCloseLocationSearch"
+            android:layout_marginBottom="@dimen/up_margin"
+            android:backgroundTint="@color/cardview_light_background"
+            android:background="@mipmap/ic_launcher_round"
+            android:src="@drawable/ic_marker_search"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginRight="@dimen/down_margin" />
 
 
     </com.google.android.material.navigation.NavigationView>

@@ -92,7 +92,6 @@ public class notePage extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(),"儲存成功",Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
         c.close();

@@ -5,7 +5,7 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="down_margin">16dp</dimen>
-    <dimen name="up_margin">60dp</dimen>
+    <dimen name="up_margin">64dp</dimen>
     <dimen name="FABsize">48dp</dimen>
     <dimen name="scrollViewPaddingTop">10dp</dimen>
     <dimen name="scrollViewPaddingLeft">25dp</dimen>
