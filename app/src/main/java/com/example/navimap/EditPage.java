@@ -38,12 +38,14 @@ public class EditPage extends AppCompatActivity{
     private AppAdapter mAdapter;
     private SwipeMenuListView mListView;
     private tinyDB DB;
+    private noteDB notedb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editpage);
         DB = new tinyDB(this);
+        notedb = new noteDB(this);
 
         mListView = (SwipeMenuListView) findViewById(R.id.listView);
 
@@ -145,9 +147,12 @@ public class EditPage extends AppCompatActivity{
         db.close();
     }
     private void deleteDB(String title){
-        SQLiteDatabase db = DB.getReadableDatabase();
+        SQLiteDatabase db = DB.getWritableDatabase();
+        SQLiteDatabase ndb = notedb.getWritableDatabase();
         db.delete(DB.getTableName(),"_title = '"+title + "';",null);
+        ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
         db.close();
+        ndb.close();
         //刪除時要改資料庫
     }
 

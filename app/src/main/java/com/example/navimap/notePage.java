@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,7 +40,8 @@ public class notePage extends AppCompatActivity {
 
     private void initItem(){
         DB = new noteDB(this);
-        //DB.onCreate(DB.getWritableDatabase());
+        //DB.onCreate(DB.getWritableDatabase()); //建立Table
+        //DB.onUpgrade(DB.getWritableDatabase(),1,1); // 清除Table
         saveBtn = findViewById(R.id.saveBtn);
         content = findViewById(R.id.editContent);
         titleIntent = getIntent();
@@ -58,14 +60,16 @@ public class notePage extends AppCompatActivity {
             id = c.getInt(0);
             content.setText(c.getString(2));
             saveContent = c.getString(2);
-            c.close();
-        }catch(SQLiteException e){
+        }catch(Exception e){
             ContentValues values = new ContentValues();
             values.put("_title",title);
             values.put("_content","");
             db.insert(DB.getTableName(),null,values);
             content.setText("");
             saveContent = "";
+            c = db.rawQuery(SQLinst,null);
+            c.moveToFirst();
+            id = c.getInt(0);
         }
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -86,10 +90,12 @@ public class notePage extends AppCompatActivity {
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         content.clearFocus();
                     }
+                    Toast.makeText(getApplicationContext(),"儲存成功",Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+        c.close();
         db.close();
     }
 
