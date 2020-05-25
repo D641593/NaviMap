@@ -1,16 +1,20 @@
 package com.example.navimap;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -33,6 +37,8 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //    GPS定位
     private LocationManager locationMgr;
     private String provider;
+    private LatLng nowLocation;
     public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 11;
 
     private int menuLength;
@@ -120,7 +127,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                provider = LocationManager.GPS_PROVIDER;
+                locationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        // Show an expanation to the user *asynchronously* -- don't block
+                        // this thread waiting for the user's response! After the user
+                        // sees the explanation, try again to request the permission.
+                    } else {
+                        // No explanation needed, we can request the permission.
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                        // MY_PERMISSIONS_REQUEST_FINE_LOCATION is an
+                        // app-defined int constant. The callback method gets the
+                        // result of the request.
+                    }
+                }
 
+                Location location = locationMgr.getLastKnownLocation(provider);
+                if(location != null){
+                    nowLocation = new LatLng(location.getLatitude(),location.getLongitude());
+                    Toast.makeText(getApplicationContext(),nowLocation.toString(),Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"定位中",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -203,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
         }
     }
+
+
+
 
     private void initMenuAndMarker(){
         Menu m = navigationView.getMenu();
