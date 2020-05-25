@@ -7,4 +7,6 @@
     <dimen name="down_margin">16dp</dimen>
     <dimen name="up_margin">60dp</dimen>
     <dimen name="FABsize">48dp</dimen>
+    <dimen name="scrollViewPaddingTop">10dp</dimen>
+    <dimen name="scrollViewPaddingLeft">25dp</dimen>
 </resources>
