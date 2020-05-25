@@ -77,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationManager locationMgr;
     private String provider;
     private LatLng nowLocation;
+    private Marker lastposiotion;
     public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 11;
-
+    
     private int menuLength;
     private NavigationView navigationView;
     private boolean writable = false;
@@ -145,12 +146,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 Location location = locationMgr.getLastKnownLocation(provider);
+
                 if(location != null){
+                    if(nowLocation!=null){
+                        lastposiotion.remove();
+                        Toast.makeText(getApplicationContext(),"asd",Toast.LENGTH_SHORT).show();
+                    }
                     nowLocation = new LatLng(location.getLatitude(),location.getLongitude());
                     shortDistance();
                     BitmapDescriptor descriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-                    mMap.addMarker(new MarkerOptions().position(nowLocation).title("所在位置").icon(descriptor));
-                    //Toast.makeText(getApplicationContext(),nowLocation.toString(),Toast.LENGTH_SHORT).show();
+                    lastposiotion = mMap.addMarker(new MarkerOptions().position(nowLocation).title("所在位置").icon(descriptor));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(nowLocation));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"定位中",Toast.LENGTH_SHORT).show();
