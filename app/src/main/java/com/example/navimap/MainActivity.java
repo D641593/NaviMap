@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.CameraPosition;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Dialog calendar;
     private EditText year, month, day, hour, min, during;
     private Button calendar_add, calendar_cancel;
+    private Spinner unit;
     private AlertDialog.Builder add_calendar_dialog;
 
     private int menuLength;
@@ -327,11 +329,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 Calendar beginTime = Calendar.getInstance();
                                 beginTime.set(y, m - 1, d, h, minute);
-                                Toast.makeText(getApplicationContext(), "begin", Toast.LENGTH_SHORT).show();
+
+
+                                String[] U = getResources().getStringArray(R.array.timeMenu);
+                                switch (unit.getSelectedItemPosition()){
+                                    case 0:
+                                        y += monment;
+                                        if( y >= now.get(Calendar.YEAR) + 100){
+                                            Toast.makeText(getApplicationContext(),"你活不了這麼久",Toast.LENGTH_SHORT).show();
+                                            clearEdit(during);
+                                            return;
+                                        }
+                                        break;
+                                    case 1:
+                                        m += monment;
+                                        break;
+                                    case 2:
+                                        d += monment;
+                                        break;
+                                    case 3:
+                                        h += monment;
+                                        break;
+
+                                }
+
                                 //建立事件結束時間
                                 Calendar endTime = Calendar.getInstance();
 
-                                endTime.set(y, m - 1, d + monment, h, minute);
+                                endTime.set(y, m - 1, d, h, minute);
 
                                 //建立 CalendarIntentHelper 實體
                                 CalendarIntentHelper calIntent = new CalendarIntentHelper();
@@ -382,6 +407,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         hour = (EditText)calendar.findViewById(R.id.num_hour);
         min = (EditText)calendar.findViewById(R.id.num_min);
         during = (EditText)calendar.findViewById(R.id.during);
+        unit = (Spinner)calendar.findViewById(R.id.unit);
         calendar_add = (Button)calendar.findViewById(R.id.calender_add);
         calendar_cancel = (Button)calendar.findViewById(R.id.calender_cancel);
     }

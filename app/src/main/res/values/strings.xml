@@ -16,6 +16,12 @@
     <string name="newMarker">新增標記點</string>
     <string name="addcalendar">時間提醒</string>
     <string name="titleHint">Title</string>
+    <string-array name="timeMenu">
+        <item>年</item>
+        <item>月</item>
+        <item>日</item>
+        <item>小時</item>
+    </string-array>
 
     <string name="title_activity_maps">Map</string>
     <string name="edit">Edit</string>

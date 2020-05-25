@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
-    android:layout_height="150dp"
+    android:layout_height="200dp"
     android:orientation="vertical"
-    android:gravity="center">
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:orientation="horizontal">
 
 
@@ -15,92 +18,97 @@
             android:id="@+id/num_year"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:inputType="numberDecimal" />
         <TextView
             android:id="@+id/year"
-            android:layout_width="5dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="年" />
 
         <EditText
             android:id="@+id/num_month"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:inputType="numberDecimal" />
         <TextView
             android:id="@+id/month"
-            android:layout_width="5dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="月" />
 
 
         <EditText
             android:id="@+id/num_day"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:inputType="numberDecimal" />
         <TextView
             android:id="@+id/day"
-            android:layout_width="5dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="日" />
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <EditText
             android:id="@+id/num_hour"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:inputType="numberDecimal" />
         <TextView
             android:id="@+id/hour"
-            android:layout_width="5dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="點" />
+
         <EditText
             android:id="@+id/num_min"
             android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:ems="10"
             android:inputType="numberDecimal" />
+
         <TextView
             android:id="@+id/min"
-            android:layout_width="5dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="分" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="天數"/>
+            android:layout_marginRight="5dp"
+            android:text="離結束還有"/>
         <EditText
             android:id="@+id/during"
-            android:layout_width="50dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:inputType="numberDecimal"/>
+
+        <Spinner
+            android:id="@+id/unit"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/timeMenu"/>
 
     </LinearLayout>
     <Button
