@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/noteLayout">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/scrollViewPaddingTop"
+        android:paddingTop="@dimen/scrollViewPaddingTop"
+        android:paddingLeft="@dimen/scrollViewPaddingLeft"
+        android:paddingRight="@dimen/scrollViewPaddingLeft">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/editContent"/>
+    </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/saveBtn_layout"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/saveBtn"
+            android:text="@string/saveBtnText"
+            android:textColor="@color/btnTextColor"
+            android:background="@drawable/btn_shape"
+            android:textSize="20dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

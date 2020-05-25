@@ -26,4 +26,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="edit">Edit</string>
     <string name="google_map"><![CDATA[< Google Map]]></string>
+
+    <string name="saveBtnText">儲存</string>
+    <string name="action_gallery">加入圖片</string>
+    <string name="action_time">時間提醒</string>
 </resources>

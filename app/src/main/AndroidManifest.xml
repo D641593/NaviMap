@@ -28,6 +28,7 @@
         </activity>
 
         <activity android:name=".EditPage"/>
+        <activity android:name=".notePage"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
