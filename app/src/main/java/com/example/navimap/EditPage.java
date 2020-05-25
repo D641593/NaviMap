@@ -113,7 +113,7 @@ public class EditPage extends AppCompatActivity{
                         break;
                     case 2:
                         // delete
-//                        deleteDB(item);
+                        deleteDB(item);
                         markerList.remove(position);
                         //通知监听者数据集发生改变，更新ListView界面
                         mListView.setAdapter(mAdapter);
@@ -161,12 +161,10 @@ public class EditPage extends AppCompatActivity{
     }
 
     private void NoteOpen(String name){
-//        Intent intent = new Intent();
-//        intent.setClass(EditPage.this, game.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("Name",item);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setClass(EditPage.this, notePage.class);
+        intent.putExtra("Title",name);
+        startActivity(intent);
     }
 
     private View.OnClickListener GoBack = new View.OnClickListener() {

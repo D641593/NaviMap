@@ -1,14 +1,18 @@
 package com.example.navimap;
 
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -35,6 +39,7 @@ public class notePage extends AppCompatActivity {
 
     private void initItem(){
         DB = new noteDB(this);
+        //DB.onCreate(DB.getWritableDatabase());
         saveBtn = findViewById(R.id.saveBtn);
         content = findViewById(R.id.editContent);
         titleIntent = getIntent();
@@ -43,14 +48,22 @@ public class notePage extends AppCompatActivity {
 
     private void setItem(){
 
+        getSupportActionBar().setTitle(title);
+        Cursor c = null;
         SQLiteDatabase db = DB.getReadableDatabase();
-        String SQLinst = "select * from " + DB.getTableName() + " where _title = " + title + ";";
-        Cursor c = db.rawQuery(SQLinst,null);
-        if(c.moveToFirst()){
+        String SQLinst = "select * from " + DB.getTableName() + " where _title = '" + title + "';";
+        try {
+            c = db.rawQuery(SQLinst,null);
+            c.moveToFirst();
             id = c.getInt(0);
             content.setText(c.getString(2));
             saveContent = c.getString(2);
-        }else{
+            c.close();
+        }catch(SQLiteException e){
+            ContentValues values = new ContentValues();
+            values.put("_title",title);
+            values.put("_content","");
+            db.insert(DB.getTableName(),null,values);
             content.setText("");
             saveContent = "";
         }
@@ -66,14 +79,20 @@ public class notePage extends AppCompatActivity {
                     System.out.println(values.toString());
                     db.update(DB.getTableName(),values,"_id = " + id , null);
                     db.close();
+                    // Check if no view has focus:
+                    View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        content.clearFocus();
+                    }
                 }
 
             }
         });
-
-        c.close();
         db.close();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){

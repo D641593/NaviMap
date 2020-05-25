@@ -7,21 +7,25 @@
     android:layout_height="match_parent"
     android:id="@+id/noteLayout">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/scrollViewPaddingTop"
-        android:paddingTop="@dimen/scrollViewPaddingTop"
-        android:paddingLeft="@dimen/scrollViewPaddingLeft"
-        android:paddingRight="@dimen/scrollViewPaddingLeft">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/editContent"/>
-    </ScrollView>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/scrollViewPaddingTop"
+            android:paddingTop="@dimen/scrollViewPaddingTop"
+            android:paddingLeft="@dimen/scrollViewPaddingLeft"
+            android:paddingRight="@dimen/scrollViewPaddingLeft">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/editContent"/>
+        </ScrollView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/saveBtn_layout"
         android:padding="10dp"
         android:layout_alignParentBottom="true">

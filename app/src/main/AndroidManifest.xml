@@ -19,7 +19,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,8 +28,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".EditPage"/>
-        <activity android:name=".notePage"/>
+        <activity android:name=".EditPage"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".notePage"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
