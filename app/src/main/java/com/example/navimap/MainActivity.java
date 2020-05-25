@@ -145,7 +145,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Location location = locationMgr.getLastKnownLocation(provider);
                 if(location != null){
                     nowLocation = new LatLng(location.getLatitude(),location.getLongitude());
-                    Toast.makeText(getApplicationContext(),nowLocation.toString(),Toast.LENGTH_SHORT).show();
+                    shortDistance();
+                    //Toast.makeText(getApplicationContext(),nowLocation.toString(),Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"定位中",Toast.LENGTH_SHORT).show();
@@ -233,6 +234,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private void shortDistance(){
+
+    }
 
     private void initMenuAndMarker(){
         Menu m = navigationView.getMenu();
@@ -343,8 +347,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         alertDialog.setTitle("刪除標記點!");
         alertDialog.setMessage("你確定要刪除嗎?");
     }
-
-
 
 
     private void DBadd(String Title,double latitude,double longitude){
