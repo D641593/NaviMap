@@ -28,6 +28,8 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
-        btn_search = findViewById(R.id.search);
+        btn_search = findViewById(R.id.mostCloseLocationSearch);
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(location != null){
                     nowLocation = new LatLng(location.getLatitude(),location.getLongitude());
                     shortDistance();
+                    BitmapDescriptor descriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+                    mMap.addMarker(new MarkerOptions().position(nowLocation).title("所在位置").icon(descriptor));
                     //Toast.makeText(getApplicationContext(),nowLocation.toString(),Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -237,12 +241,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void shortDistance(){
         SQLiteDatabase db = DB.getReadableDatabase();
         Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
-        while (c != null){
-            c.moveToFirst();
+        c.moveToFirst();
+        float min = 0;
+        String name = null;
+        while (!c.isAfterLast()){
+
             lati = c.getDouble(2);
             longi = c.getDouble(3);
             System.out.println(longi+ "\n" + lati);
+            float[] result = new float[1];
+            Location.distanceBetween(nowLocation.latitude, nowLocation.longitude, lati, longi, result);
+            if(min > result[0] || min == 0){
+                name = c.getString(1);
+                min = result[0];
+            }
+            c.moveToNext();
         }
+        Toast.makeText(getApplicationContext(),"目前最近的點為" + name , Toast.LENGTH_SHORT).show();
         c.close();
         db.close();
 
