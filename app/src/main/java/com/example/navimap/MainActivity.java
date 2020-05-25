@@ -329,9 +329,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 Calendar beginTime = Calendar.getInstance();
                                 beginTime.set(y, m - 1, d, h, minute);
-
-
-                                String[] U = getResources().getStringArray(R.array.timeMenu);
+                                
                                 switch (unit.getSelectedItemPosition()){
                                     case 0:
                                         y += monment;
