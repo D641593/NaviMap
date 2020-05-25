@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int id;
     private SearchView searchView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -229,11 +228,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     item.setChecked(true);
                     System.out.println("title is " + item.getTitle());
                     System.out.println("id is " + id);
+
                     SQLiteDatabase db = DB.getReadableDatabase();
                     Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _id = " + id + ";",null);
                     c.moveToFirst();
                     lati = c.getDouble(2);
                     longi = c.getDouble(3);
+
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(lati,longi)).zoom(16).build();
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                     drawer.closeDrawer(GravityCompat.START);
@@ -282,10 +283,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             longi = c.getDouble(3);
             m.add(R.id.sideList,dbID,0,dbTitle).setIcon(R.drawable.ic_marker_location);
             System.out.println("add Menu item : " + dbTitle);
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lati,longi)).title(dbTitle));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(lati,longi)).title(dbTitle).draggable(true));
             System.out.println("add Marker : " + dbTitle + " Lati : " + String.valueOf(lati) + " longi : " + String.valueOf(longi));
             c.moveToNext();
         }
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                SQLiteDatabase db = DB.getWritableDatabase();
+                ContentValues markerValues = new ContentValues();
+                System.out.println("marker" + marker.getTitle() + marker.getPosition().toString());
+                markerValues.put("_title",marker.getTitle());
+                markerValues.put("_latitude",marker.getPosition().latitude);
+                markerValues.put("_longitude",marker.getPosition().longitude);
+                String[] para = new String[]{marker.getId()};
+                db.update(DB.getTableName(),markerValues,"_title = '" + marker.getTitle() + "';",null);
+                db.close();
+            }
+        });
         c.close();
         db.close();
 
@@ -497,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(title.getText().toString().isEmpty()){
                             Toast.makeText(getApplicationContext(),"can't empty",Toast.LENGTH_SHORT).show();
                         }else {
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(title.getText().toString()));
+                            googleMap.addMarker(new MarkerOptions().position(latLng).title(title.getText().toString()).draggable(true));
                             writable = true;
                             DBadd(title.getText().toString(), latLng.latitude, latLng.longitude);
                             supportInvalidateOptionsMenu();
