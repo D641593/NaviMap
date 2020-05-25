@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLData;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -59,8 +60,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private Dialog dialog;
     private EditText title;
-    private Button add,cancel;
+    private Button add,cancel,time_add;
     private AlertDialog.Builder alertDialog;
+
+//    Calendar dialog
+    private Dialog calendar;
+    private EditText year, month, day, hour, min, during;
+    private Button calendar_add, calendar_cancel;
+    private AlertDialog.Builder add_calendar_dialog;
+
     private int menuLength;
     private NavigationView navigationView;
     private boolean writable = false;
@@ -285,6 +293,122 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         alertDialog.setMessage("你確定要刪除嗎?");
     }
 
+    private void init_alertCalendar_dialog(final String titleName){
+        add_calendar_dialog = new AlertDialog.Builder(this);
+        add_calendar_dialog.setTitle("時間提醒");
+        add_calendar_dialog.setMessage("你想要設置時間提醒嗎?");
+        add_calendar_dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                init_calendar_dialog();
+                calendar.show();
+                calendar_add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //建立事件開始時間
+                        if(checkEditNull()){
+                            Toast.makeText(getApplicationContext(),"不能有空",Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Calendar now = Calendar.getInstance();
+                            int y = Integer.parseInt(year.getText().toString().trim());
+                            if (y < now.get(Calendar.YEAR)) {
+                                Toast.makeText(getApplicationContext(), "時間回不去了", Toast.LENGTH_SHORT).show();
+                                clearEdit(year);
+                            } else if (y >= now.get(Calendar.YEAR) + 100) {
+                                Toast.makeText(getApplicationContext(), "你真的能活這麼久??", Toast.LENGTH_SHORT).show();
+                                clearEdit(year);
+                            } else {
+                                int m = Integer.parseInt(month.getText().toString().trim());
+                                int d = Integer.parseInt(day.getText().toString().trim());
+                                int h = Integer.parseInt(hour.getText().toString().trim());
+                                int minute = Integer.parseInt(min.getText().toString().trim());
+                                int monment = Integer.parseInt(during.getText().toString().trim());
+
+                                Calendar beginTime = Calendar.getInstance();
+                                beginTime.set(y, m - 1, d, h, minute);
+                                Toast.makeText(getApplicationContext(), "begin", Toast.LENGTH_SHORT).show();
+                                //建立事件結束時間
+                                Calendar endTime = Calendar.getInstance();
+
+                                endTime.set(y, m - 1, d + monment, h, minute);
+
+                                //建立 CalendarIntentHelper 實體
+                                CalendarIntentHelper calIntent = new CalendarIntentHelper();
+                                //設定值
+                                calIntent.setTitle(titleName);
+                                //                            calIntent.setDescription("事件內容描述");
+                                calIntent.setBeginTimeInMillis(beginTime.getTimeInMillis());
+                                calIntent.setEndTimeInMillis(endTime.getTimeInMillis());
+                                //                            calIntent.setLocation("事件地點");
+
+                                //全部設定好後就能夠取得 Intent
+                                Intent intent = calIntent.getIntentAfterSetting();
+
+                                //送出意圖
+                                startActivity(intent);
+
+                                clearEdit("All");
+                                calendar.dismiss();
+                            }
+                        }
+
+                    }
+                });
+                calendar_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clearEdit("All");
+                        calendar.dismiss();
+                    }
+                });
+            }
+        });
+        add_calendar_dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public void init_calendar_dialog(){
+        calendar = new Dialog(this);
+        calendar.setTitle("Add time!");
+        calendar.setContentView(R.layout.calender_add);
+        year = (EditText)calendar.findViewById(R.id.num_year);
+        month = (EditText)calendar.findViewById(R.id.num_month);
+        day = (EditText)calendar.findViewById(R.id.num_day);
+        hour = (EditText)calendar.findViewById(R.id.num_hour);
+        min = (EditText)calendar.findViewById(R.id.num_min);
+        during = (EditText)calendar.findViewById(R.id.during);
+        calendar_add = (Button)calendar.findViewById(R.id.calender_add);
+        calendar_cancel = (Button)calendar.findViewById(R.id.calender_cancel);
+    }
+
+    public boolean checkEditNull(){
+        if(year.getText().toString().isEmpty() || month.getText().toString().isEmpty() || day.getText().toString().isEmpty()
+          || hour.getText().toString().isEmpty() || min.getText().toString().isEmpty() || during.getText().toString().isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    public void clearEdit(EditText text){
+        text.setText("");
+    }
+
+    public void clearEdit(String all){
+        if(all.equals("All")){
+            year.setText("");
+            month.setText("");
+            day.setText("");
+            hour.setText("");
+            min.setText("");
+            during.setText("");
+        }
+    }
+
     private void DBadd(String Title,double latitude,double longitude){
         SQLiteDatabase db = DB.getWritableDatabase();
         ContentValues values =  new ContentValues();
@@ -391,6 +515,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             DBadd(title.getText().toString(), latLng.latitude, latLng.longitude);
                             supportInvalidateOptionsMenu();
                             dialog.dismiss();
+                            init_alertCalendar_dialog(title.getText().toString());
+                            add_calendar_dialog.show();
                         }
                     }
                 });
