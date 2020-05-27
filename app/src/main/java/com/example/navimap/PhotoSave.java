@@ -8,7 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class PhotoSave {
-    public String save(Bitmap bitmap, File filePath , String pictureName, int id){
+    private static int id = 1;
+    public String save(Bitmap bitmap, File filePath , String pictureName){
 
         File finalImageFile = new File(filePath,  pictureName + id + ".jpg");
         if (finalImageFile.exists()) {
@@ -27,11 +28,7 @@ public class PhotoSave {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-//
-//        if (bitmap == null) {
-////            Toast.makeText(this, "圖片不存在", Toast.LENGTH_SHORT).show();
-////            return;
-//        }
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         try {
             fos.flush();
@@ -40,6 +37,7 @@ public class PhotoSave {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        id++;
         return finalImageFile.getAbsolutePath();
     }
 }

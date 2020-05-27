@@ -132,15 +132,14 @@ public class notePage extends AppCompatActivity {
 
         if (resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            File[] filePath =getExternalFilesDirs("DIRECTORY_PICTURES");
+            File[] filePath =getExternalFilesDirs("note_photo");
             if (!filePath[0].exists()) {
                 filePath[0].mkdir();
             }
-            else {
-                PhotoSave cam = new PhotoSave();
-                String path= cam.save(bitmap, filePath[0], "markerName", 0);
-                System.out.println("\n"+path+"\n");
-            }
+
+            PhotoSave cam = new PhotoSave();
+            String path= cam.save(bitmap, filePath[0], title);
+            System.out.println("\n"+path+"\n");
 //            image = findViewById(R.id.image);
 //            image.setImageBitmap(bitmap);
         }
