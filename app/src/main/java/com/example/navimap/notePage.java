@@ -15,9 +15,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -123,7 +126,7 @@ public class notePage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_gallery){
-
+            addImage();
         }else if(item.getItemId() == R.id.action_time){
             if (!saveContent.equals(content.getText().toString())){
                 Toast.makeText(getApplicationContext(),"請先儲存",Toast.LENGTH_SHORT).show();
@@ -252,6 +255,17 @@ public class notePage extends AppCompatActivity {
             min.setText("");
             during.setText("");
         }
+    }
+
+    private void addImage(){
+        //ImageView image = findViewById(R.id.image);
+        //image.setImageBitmap(bitmap);
+        ImageView image = new ImageView(this);
+        image.setImageResource(R.drawable.ic_default);
+        RelativeLayout Rlayout = findViewById(R.id.RLayout);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //params.bottomMargin = 200;
+        Rlayout.addView(image,params);
     }
 
 }
