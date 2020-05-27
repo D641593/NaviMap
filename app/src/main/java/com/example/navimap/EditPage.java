@@ -157,12 +157,12 @@ public class EditPage extends AppCompatActivity{
     }
 
     private void open(String item) {
-//        Intent intent = new Intent();
-//        intent.setClass(EditPage.this, game.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("Name",item);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setClass(EditPage.this, journal.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Name",item);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void NoteOpen(String name){
