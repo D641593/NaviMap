@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +23,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
 import java.util.Calendar;
 
 public class notePage extends AppCompatActivity {
@@ -120,10 +124,33 @@ public class notePage extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            File[] filePath =getExternalFilesDirs("DIRECTORY_PICTURES");
+            if (!filePath[0].exists()) {
+                filePath[0].mkdir();
+            }
+            else {
+                PhotoSave cam = new PhotoSave();
+                String path= cam.save(bitmap, filePath[0], "markerName", 0);
+                System.out.println("\n"+path+"\n");
+            }
+//            image = findViewById(R.id.image);
+//            image.setImageBitmap(bitmap);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_gallery){
-
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent,0);
         }else if(item.getItemId() == R.id.action_time){
             if (!saveContent.equals(content.getText().toString())){
                 Toast.makeText(getApplicationContext(),"請先儲存",Toast.LENGTH_SHORT).show();
