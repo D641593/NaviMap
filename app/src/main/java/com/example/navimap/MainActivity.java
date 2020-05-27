@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng nowLocation;
     private Marker lastposiotion;
     public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 11;
-    
+
     private int menuLength;
     private NavigationView navigationView;
     private boolean writable = false;

@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,12 +23,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
 import java.util.Calendar;
 
 public class notePage extends AppCompatActivity {
@@ -44,6 +50,7 @@ public class notePage extends AppCompatActivity {
     private Button calendar_add, calendar_cancel;
     private Spinner unit;
     private AlertDialog.Builder add_calendar_dialog;
+    private LinearLayout Rlayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class notePage extends AppCompatActivity {
         content = findViewById(R.id.editContent);
         titleIntent = getIntent();
         title = titleIntent.getStringExtra("Title");
+        Rlayout = findViewById(R.id.RLayout);
     }
 
     private void setItem(){
@@ -123,10 +131,33 @@ public class notePage extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            File[] filePath = getExternalFilesDirs("DIRECTORY_PICTURES");
+            if (!filePath[0].exists()) {
+                filePath[0].mkdir();
+            }
+
+            PhotoSave cam = new PhotoSave();
+            String path= cam.save(bitmap, filePath[0], "markerName", 0);
+            System.out.println("\n"+path+"\n");
+            addImage(bitmap);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_gallery){
-            addImage();
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent,0);
+
         }else if(item.getItemId() == R.id.action_time){
             if (!saveContent.equals(content.getText().toString())){
                 Toast.makeText(getApplicationContext(),"請先儲存",Toast.LENGTH_SHORT).show();
@@ -257,15 +288,19 @@ public class notePage extends AppCompatActivity {
         }
     }
 
-    private void addImage(){
-        //ImageView image = findViewById(R.id.image);
-        //image.setImageBitmap(bitmap);
+    private void addEditText(String content){
+        EditText text = new EditText(this);
+        text.setText(content);
+        text.setTextSize(18);
+        text.requestFocus();
+        Rlayout.addView(text);
+    }
+    private void addImage(Bitmap bitmap){
         ImageView image = new ImageView(this);
-        image.setImageResource(R.drawable.ic_default);
-        RelativeLayout Rlayout = findViewById(R.id.RLayout);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //params.bottomMargin = 200;
-        Rlayout.addView(image,params);
+        image.setImageBitmap(bitmap);
+        image.setPadding(10,10,10,10);
+        Rlayout.addView(image);
+        addEditText("");
     }
 
 }

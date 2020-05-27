@@ -17,21 +17,19 @@
             android:paddingTop="@dimen/scrollViewPaddingTop"
             android:paddingLeft="@dimen/scrollViewPaddingLeft"
             android:paddingRight="@dimen/scrollViewPaddingLeft">
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/editContent"/>
-
+                android:id="@+id/RLayout"
+                android:orientation="vertical">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editContent"/>
+            </LinearLayout>
         </ScrollView>
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:id="@+id/RLayout">
 
-    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
