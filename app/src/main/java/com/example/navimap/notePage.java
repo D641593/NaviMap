@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -124,32 +125,39 @@ public class notePage extends AppCompatActivity {
         return true;
     }
 
+//    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//    startActivityForResult(intent,0);
+//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        // TODO Auto-generated method stub
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == Activity.RESULT_OK) {
+//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+//            File[] filePath =getExternalFilesDirs("photo");
+//            if (!filePath[0].exists()) {
+//                filePath[0].mkdir();
+//            }
+//
+//            PhotoSave cam = new PhotoSave();
+//            String path= cam.save(bitmap, filePath[0], title);
+//            System.out.println("\n"+path+"\n");
+////            image = findViewById(R.id.image);
+////            image.setImageBitmap(bitmap);
+//        }
+//    }
+
+//
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            File[] filePath =getExternalFilesDirs("note_photo");
-            if (!filePath[0].exists()) {
-                filePath[0].mkdir();
-            }
-
-            PhotoSave cam = new PhotoSave();
-            String path= cam.save(bitmap, filePath[0], title);
-            System.out.println("\n"+path+"\n");
-//            image = findViewById(R.id.image);
-//            image.setImageBitmap(bitmap);
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_gallery){
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent,0);
+            File[] sd = getExternalFilesDirs("photo");
+            PhotoSave cam = new PhotoSave();
+//            image = findViewById(R.id.image);
+//            image.setImageBitmap(cam.getBitmapFromPhoto(sd[0], "Test.jpg"));
+
         }else if(item.getItemId() == R.id.action_time){
             if (!saveContent.equals(content.getText().toString())){
                 Toast.makeText(getApplicationContext(),"請先儲存",Toast.LENGTH_SHORT).show();

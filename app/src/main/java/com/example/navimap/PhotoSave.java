@@ -1,6 +1,10 @@
 package com.example.navimap;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +13,20 @@ import java.io.IOException;
 
 public class PhotoSave {
     private static int id = 1;
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    Bitmap getBitmapFromPhoto(File sd, String file)
+    {
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(sd + "/" + file);
+            return bitmap;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public String save(Bitmap bitmap, File filePath , String pictureName){
 
         File finalImageFile = new File(filePath,  pictureName + id + ".jpg");
@@ -39,5 +57,20 @@ public class PhotoSave {
         }
         id++;
         return finalImageFile.getAbsolutePath();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private Bitmap getBitmapFromPhoto(File[] sd,String file)
+    {
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(sd[0] + "/" + file);
+            return bitmap;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
