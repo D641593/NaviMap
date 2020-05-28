@@ -163,6 +163,7 @@ public class notePage extends AppCompatActivity {
         return true;
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -268,6 +269,7 @@ public class notePage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     public void init_calendar_dialog(){
         calendar = new Dialog(this);
         calendar.setTitle("Add time!");
@@ -318,9 +320,9 @@ public class notePage extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void addImage(Uri uri, boolean addEditFlag){
-        if (contents.get(contents.size() - 1).first instanceof EditText) {
+        if (contents.size() > 0 && contents.get(contents.size() - 1).first instanceof EditText) {
             EditText editText = (EditText) contents.get(contents.size() - 1).first;
-            if (editText.getText().toString() == "") {
+            if (editText.getText().toString().equals("")) {
                 contents.remove(contents.size() - 1);
                 Rlayout.removeView(editText);
             }
