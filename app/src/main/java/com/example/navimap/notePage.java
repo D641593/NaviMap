@@ -47,6 +47,7 @@ public class notePage extends AppCompatActivity {
     private Spinner unit;
     private AlertDialog.Builder add_calendar_dialog;
 
+    private PhotoSave cam = new PhotoSave();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,38 +126,22 @@ public class notePage extends AppCompatActivity {
         return true;
     }
 
-//    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//    startActivityForResult(intent,0);
-//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        // TODO Auto-generated method stub
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (resultCode == Activity.RESULT_OK) {
-//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            File[] filePath =getExternalFilesDirs("photo");
-//            if (!filePath[0].exists()) {
-//                filePath[0].mkdir();
-//            }
-//
-//            PhotoSave cam = new PhotoSave();
-//            String path= cam.save(bitmap, filePath[0], title);
-//            System.out.println("\n"+path+"\n");
-////            image = findViewById(R.id.image);
-////            image.setImageBitmap(bitmap);
-//        }
-//    }
 
-//
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_gallery){
-            File[] sd = getExternalFilesDirs("photo");
-            PhotoSave cam = new PhotoSave();
-//            image = findViewById(R.id.image);
-//            image.setImageBitmap(cam.getBitmapFromPhoto(sd[0], "Test.jpg"));
+
+            if (!cam.hasPermission(getApplicationContext())) {
+                if (cam.needCheckPermission(notePage.this)) {
+                    //如果須要檢查權限，由於這個步驟要等待使用者確認，
+                    //所以不能立即執行儲存的動作，
+                    //必須在 onRequestPermissionsResult 回應中才執行
+                    return false;
+                }
+            }
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent,0);
+
 
         }else if(item.getItemId() == R.id.action_time){
             if (!saveContent.equals(content.getText().toString())){
@@ -248,6 +233,25 @@ public class notePage extends AppCompatActivity {
             });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            String path= cam.save(bitmap,"mark");
+            System.out.println("\n"+path+"\n");
+
+//            image = findViewById(R.id.image);
+//            image.setImageBitmap(bitmap);
+        }
+
     }
 
     public void init_calendar_dialog(){
