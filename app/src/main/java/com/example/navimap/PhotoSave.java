@@ -1,6 +1,10 @@
 package com.example.navimap;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +12,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class PhotoSave {
-    public String save(Bitmap bitmap, File filePath , String pictureName, int id){
+    private static int id = 1;
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    Bitmap getBitmapFromPhoto(File sd, String file)
+    {
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(sd + "/" + file);
+            return bitmap;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public String save(Bitmap bitmap, File filePath , String pictureName){
 
         File finalImageFile = new File(filePath,  pictureName + id + ".jpg");
         if (finalImageFile.exists()) {
@@ -27,11 +46,7 @@ public class PhotoSave {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-//
-//        if (bitmap == null) {
-////            Toast.makeText(this, "圖片不存在", Toast.LENGTH_SHORT).show();
-////            return;
-//        }
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         try {
             fos.flush();
@@ -40,6 +55,22 @@ public class PhotoSave {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        id++;
         return finalImageFile.getAbsolutePath();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private Bitmap getBitmapFromPhoto(File[] sd,String file)
+    {
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(sd[0] + "/" + file);
+            return bitmap;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

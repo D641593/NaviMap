@@ -7,28 +7,21 @@
     android:layout_height="match_parent"
     android:id="@+id/noteLayout">
 
-    <RelativeLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ScrollView
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/scrollViewPaddingTop"
+        android:paddingTop="@dimen/scrollViewPaddingTop"
+        android:paddingLeft="@dimen/scrollViewPaddingLeft"
+        android:paddingRight="@dimen/scrollViewPaddingLeft">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/scrollViewPaddingTop"
-            android:paddingTop="@dimen/scrollViewPaddingTop"
-            android:paddingLeft="@dimen/scrollViewPaddingLeft"
-            android:paddingRight="@dimen/scrollViewPaddingLeft">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/RLayout"
-                android:orientation="vertical">
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/editContent"/>
-            </LinearLayout>
-        </ScrollView>
-    </RelativeLayout>
+            android:id="@+id/RLayout"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"

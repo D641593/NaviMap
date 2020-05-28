@@ -1,5 +1,6 @@
 package com.example.navimap;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,13 +8,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.media.Image;
+
+import android.graphics.BitmapFactory;
+
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,25 +31,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class notePage extends AppCompatActivity {
 
+    private static final int REQUEST_READ_EXTERNAL_STORAGE = 0x1000;
+    private static final int REQUEST_GALLERY = 0x1001;
     private noteDB DB;
     private Button saveBtn;
-    private EditText content;
     private String title;
     private Intent titleIntent;
-    private String saveContent;
-    private int id;
 
     //    Calendar dialog
     private Dialog calendar;
@@ -51,76 +60,99 @@ public class notePage extends AppCompatActivity {
     private Spinner unit;
     private AlertDialog.Builder add_calendar_dialog;
     private LinearLayout Rlayout;
+    private ArrayList<Pair<View,String>> contents = new ArrayList<>();
+    private boolean changeFlag = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_edit_page);
         initItem();
         setItem();
-
     }
 
     private void initItem(){
         DB = new noteDB(this);
-        //DB.onCreate(DB.getWritableDatabase()); //建立Table
         //DB.onUpgrade(DB.getWritableDatabase(),1,1); // 清除Table
+        DB.onCreate(DB.getWritableDatabase()); //建立Table
         saveBtn = findViewById(R.id.saveBtn);
-        content = findViewById(R.id.editContent);
         titleIntent = getIntent();
         title = titleIntent.getStringExtra("Title");
         Rlayout = findViewById(R.id.RLayout);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void setItem(){
 
         getSupportActionBar().setTitle(title);
-        Cursor c = null;
         SQLiteDatabase db = DB.getReadableDatabase();
         String SQLinst = "select * from " + DB.getTableName() + " where _title = '" + title + "';";
-        try {
-            c = db.rawQuery(SQLinst,null);
-            c.moveToFirst();
-            id = c.getInt(0);
-            content.setText(c.getString(2));
-            saveContent = c.getString(2);
-        }catch(Exception e){
-            ContentValues values = new ContentValues();
-            values.put("_title",title);
-            values.put("_content","");
-            db.insert(DB.getTableName(),null,values);
-            content.setText("");
-            saveContent = "";
-            c = db.rawQuery(SQLinst,null);
-            c.moveToFirst();
-            id = c.getInt(0);
+        Cursor c = db.rawQuery(SQLinst,null);
+        if(c.moveToFirst()){
+            while(!c.isAfterLast()){
+                String content = c.getString(2);
+                System.out.println(content);
+                if(c.getInt(3) == 1){
+                    Uri uri = Uri.parse(content);
+                    addImage(uri,false);
+                }else{
+                    addEditText(content);
+                }
+                c.moveToNext();
+            }
+            c.moveToPrevious();
+            if(c.getInt(3) == 1){
+                addEditText("");
+            }
+        }else{
+            System.out.println("No Data");
+            addEditText("");
         }
+
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(saveContent != content.getText().toString()){
-                    SQLiteDatabase db = DB.getWritableDatabase();
-                    ContentValues values = new ContentValues();
-                    values.put("_title",title);
-                    values.put("_content",content.getText().toString());
-                    System.out.println(values.toString());
-                    db.update(DB.getTableName(),values,"_id = " + id , null);
-                    db.close();
-                    // Check if no view has focus:
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        content.clearFocus();
+                SQLiteDatabase db = DB.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                String DropCondition = "_title = '" + title + "';";
+                db.delete(DB.getTableName(),DropCondition,null);
+                int i = 0;
+                while( i < contents.size()) {
+                    values.put("_title", title);
+                    if (contents.get(i).first instanceof EditText) {
+                        values.put("_content", ((EditText) contents.get(i).first).getText().toString());
+                        values.put("_image", 0);
+                    } else {
+                        values.put("_content", contents.get(i).second);
+                        values.put("_image", 1);
                     }
-                    Toast.makeText(getApplicationContext(),"儲存成功",Toast.LENGTH_SHORT).show();
-                    saveContent = content.getText().toString();
+                    db.insert(DB.getTableName(), null, values);
+                    values.clear();
+                    Toast.makeText(getApplicationContext(), "儲存成功", Toast.LENGTH_SHORT).show();
+                    i++;
                 }
+                DBShow();
+                db.close();
             }
         });
         c.close();
         db.close();
+    }
+
+    private void DBShow(){
+        SQLiteDatabase db = DB.getReadableDatabase();
+        Cursor c = db.rawQuery("Select * from " + DB.getTableName(),null);
+        if(c.moveToFirst()){
+            while(!c.isAfterLast()){
+                System.out.println(c.getString(1));
+                System.out.println(c.getString(2));
+                System.out.println(c.getInt(3));
+                c.moveToNext();
+            }
+        }
+
     }
 
 
@@ -134,35 +166,21 @@ public class notePage extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            File[] filePath = getExternalFilesDirs("DIRECTORY_PICTURES");
-            if (!filePath[0].exists()) {
-                filePath[0].mkdir();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_GALLERY) {
+                Uri uri = data.getData();
+                addImage(uri,true);
             }
-
-            PhotoSave cam = new PhotoSave();
-            String path= cam.save(bitmap, filePath[0], "markerName", 0);
-            System.out.println("\n"+path+"\n");
-            addImage(bitmap);
         }
     }
 
     @Override
+
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.action_gallery){
-
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent,0);
-
+            openGallery();
         }else if(item.getItemId() == R.id.action_time){
-            if (!saveContent.equals(content.getText().toString())){
-                Toast.makeText(getApplicationContext(),"請先儲存",Toast.LENGTH_SHORT).show();
-                return super.onOptionsItemSelected(item);
-            }
             init_calendar_dialog();
             calendar.show();
             calendar_add.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +239,7 @@ public class notePage extends AppCompatActivity {
                             CalendarIntentHelper calIntent = new CalendarIntentHelper();
                             //設定值
                             calIntent.setTitle(title);
-                            calIntent.setDescription(saveContent);
+                            //calIntent.setDescription(saveContent);
                             calIntent.setBeginTimeInMillis(beginTime.getTimeInMillis());
                             calIntent.setEndTimeInMillis(endTime.getTimeInMillis());
                             //                            calIntent.setLocation("事件地點");
@@ -288,19 +306,64 @@ public class notePage extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void addEditText(String content){
         EditText text = new EditText(this);
         text.setText(content);
         text.setTextSize(18);
+        text.setBackground(null);
         text.requestFocus();
+        contents.add(new Pair<View,String>(text,content));
         Rlayout.addView(text);
     }
-    private void addImage(Bitmap bitmap){
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void addImage(Uri uri, boolean addEditFlag){
+        if (contents.get(contents.size() - 1).first instanceof EditText) {
+            EditText editText = (EditText) contents.get(contents.size() - 1).first;
+            if (editText.getText().toString() == "") {
+                contents.remove(contents.size() - 1);
+                Rlayout.removeView(editText);
+            }
+        }
         ImageView image = new ImageView(this);
-        image.setImageBitmap(bitmap);
+        image.setImageURI(uri);
         image.setPadding(10,10,10,10);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+        image.setLayoutParams(layoutParams);
+        contents.add(new Pair<View,String>(image,uri.toString()));
         Rlayout.addView(image);
-        addEditText("");
+        if(addEditFlag) {
+            addEditText("");
+        }
+    }
+
+    private void openGallery() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                new AlertDialog.Builder(this)
+                        .setMessage("我真的沒有要做壞事, 給我權限吧?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(notePage.this,
+                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                        REQUEST_READ_EXTERNAL_STORAGE);
+                            }
+                        })
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        } else {
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
+        }
+
     }
 
 }

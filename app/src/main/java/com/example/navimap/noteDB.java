@@ -29,7 +29,8 @@ class noteDB extends SQLiteOpenHelper {
         final String SQL = "create table if not exists " + TableName + "( " +
                 "_id integer primary key autoincrement, " +
                 "_title varchar(50), " +
-                "_content varchar(3000)" + ");";
+                "_content varchar(3000), " +
+                "_image integer" + ");";
         db.execSQL(SQL);
     }
 

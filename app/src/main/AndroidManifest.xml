@@ -42,6 +42,8 @@
         <activity android:name=".notePage"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".journal"></activity>
+        <activity android:name=".journalContent"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
