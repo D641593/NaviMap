@@ -58,7 +58,6 @@ public class notePage extends AppCompatActivity {
     private EditText year, month, day, hour, min, during;
     private Button calendar_add, calendar_cancel;
     private Spinner unit;
-    private AlertDialog.Builder add_calendar_dialog;
     private LinearLayout Rlayout;
     private ArrayList<Pair<View,String>> contents = new ArrayList<>();
     private boolean changeFlag = false;
@@ -161,19 +160,6 @@ public class notePage extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.topbutton,menu);
         return true;
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_GALLERY) {
-                Uri uri = data.getData();
-                addImage(uri,true);
-            }
-        }
     }
 
     @Override
@@ -318,6 +304,7 @@ public class notePage extends AppCompatActivity {
         contents.add(new Pair<View,String>(text,content));
         Rlayout.addView(text);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void addImage(Uri uri, boolean addEditFlag){
         if (contents.size() > 0 && contents.get(contents.size() - 1).first instanceof EditText) {
@@ -350,6 +337,18 @@ public class notePage extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_GALLERY) {
+                Uri uri = data.getData();
+                addImage(uri,true);
+            }
+        }
     }
 
 }

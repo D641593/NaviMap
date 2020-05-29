@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class PhotoSave extends FragmentActivity {
     private static int id = 1;
@@ -98,12 +100,27 @@ public class PhotoSave extends FragmentActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    Bitmap getBitmapFromPhoto(File sd, String file)
+    public ArrayList<Bitmap> getPhoto(String file)
     {
-        try
-        {
-            Bitmap bitmap = BitmapFactory.decodeFile(sd + "/" + file);
-            return bitmap;
+        try {
+//            File[] sd = getExternalFilesDirs("DIRECTORY_PICTURES"); 內部
+            String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/";
+//            File sd = new File(s);
+//            File[] t = sd.listFiles();
+            ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
+            bitmapArray.add(BitmapFactory.decodeFile(s + file));
+//            System.out.println(t);
+//            for (int i = 0; i < t.length; i++) {
+//                if (!t[i].isDirectory()) {
+//                    System.out.println(i + "\n");
+//                    System.out.println(t[i]);
+//                    image = findViewById(R.id.image);
+//                    Bitmap bitmap = BitmapFactory.decodeFile(t[i].getAbsolutePath());
+//                    image.setImageBitmap(bitmap);
+//                }
+//            }
+//            return null;
+            return bitmapArray;
         }
         catch (Exception e)
         {
