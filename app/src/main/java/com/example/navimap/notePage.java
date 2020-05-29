@@ -340,31 +340,15 @@ public class notePage extends AppCompatActivity {
     }
 
     private void openGallery() {
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                new AlertDialog.Builder(this)
-                        .setMessage("我真的沒有要做壞事, 給我權限吧?")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(notePage.this,
-                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        REQUEST_READ_EXTERNAL_STORAGE);
-                            }
-                        })
-                        .show();
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_READ_EXTERNAL_STORAGE);
+        PhotoSave photoSave = new PhotoSave();
+        if(!photoSave.hasPermission(getApplicationContext())) {
+            if (photoSave.needCheckPermission(notePage.this)){
+                return;
             }
-        } else {
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
         }
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
 
     }
 
