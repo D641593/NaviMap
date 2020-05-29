@@ -1,6 +1,7 @@
 package com.example.navimap;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -82,6 +83,18 @@ public class journal extends AppCompatActivity {
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(listitemclicklistener);
+
+        Toolbar journaltoolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(journaltoolbar);
+//
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        -----------------------Bug
+//        journaltoolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "Oh Ya", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 //    ---------------------------------methods below-----------------------------
 

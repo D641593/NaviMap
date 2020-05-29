@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".journal">
+    tools:context=".journal"
+    tools:showIn="@layout/journal_bar">
 
     <Button
         android:id="@+id/naviTo_btn"
@@ -68,12 +69,12 @@
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="268dp"
+            android:layout_width="243dp"
             android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/notecontentView"
-                android:layout_width="241dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="內容預覽" />
         </FrameLayout>
