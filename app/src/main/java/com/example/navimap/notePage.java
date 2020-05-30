@@ -85,6 +85,7 @@ public class notePage extends AppCompatActivity {
     private void setItem(){
 
         getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SQLiteDatabase db = DB.getReadableDatabase();
         String SQLinst = "select * from " + DB.getTableName() + " where _title = '" + title + "';";
         Cursor c = db.rawQuery(SQLinst,null);
@@ -251,6 +252,9 @@ public class notePage extends AppCompatActivity {
                     calendar.dismiss();
                 }
             });
+        }else if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
