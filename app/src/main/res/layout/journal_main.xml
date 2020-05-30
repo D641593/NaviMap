@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".journal"
     tools:showIn="@layout/journal_bar">
-
+    <include
+        layout="@layout/journal_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
     <Button
         android:id="@+id/naviTo_btn"
         android:layout_width="0dp"

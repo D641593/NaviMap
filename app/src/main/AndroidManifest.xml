@@ -3,7 +3,6 @@
     package="com.example.navimap">
 
     <!-- 行事曆權限   -->
-    <uses-sdk android:minSdkVersion="14" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
@@ -42,8 +41,10 @@
         <activity android:name=".notePage"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".journal"></activity>
-        <activity android:name=".journalContent"></activity>
+        <activity
+            android:name=".journal"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".journalContent"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
