@@ -46,7 +46,7 @@ public class journal extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.journal_main);
+        setContentView(R.layout.journal_activity);
 
         try{
             dbManager.open();
