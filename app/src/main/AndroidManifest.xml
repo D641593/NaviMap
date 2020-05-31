@@ -43,7 +43,8 @@
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".journal"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme"/>
+            <!--android:theme="@style/AppTheme.NoActionBar"/>-->
         <activity android:name=".journalContent"/>
 
         <meta-data

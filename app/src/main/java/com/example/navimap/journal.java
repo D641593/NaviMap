@@ -5,14 +5,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.security.spec.PSSParameterSpec;
 import java.util.ArrayList;
 
 public class journal extends AppCompatActivity {
@@ -48,6 +47,12 @@ public class journal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.journal_activity);
+
+        //Toolbar journaltoolbar = findViewById(R.id.toolbar2);
+        //setSupportActionBar(journaltoolbar);
+        getSupportActionBar().setTitle("Journal");
+        System.out.println("setEnable");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         try{
             dbManager.open();
@@ -84,9 +89,6 @@ public class journal extends AppCompatActivity {
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(listitemclicklistener);
 
-        Toolbar journaltoolbar = findViewById(R.id.toolbar2);
-        setSupportActionBar(journaltoolbar);
-        getSupportActionBar().setTitle("Journal");
 //
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        -----------------------Bug
@@ -300,4 +302,16 @@ public class journal extends AppCompatActivity {
         alertDialog.setTitle("Delete Note");
         alertDialog.setTitle("Sure To Delete Note?");
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        System.out.println("Clicked");
+        if(item.getItemId() == android.R.id.home){
+            System.out.println("Finish");
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
