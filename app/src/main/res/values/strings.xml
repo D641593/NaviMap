@@ -23,6 +23,9 @@
         <item>年</item>
     </string-array>
 
+
+    <string name="create_journal">新增遊記</string>
+
     <string name="title_activity_maps">Map</string>
     <string name="edit">Edit</string>
     <string name="google_map"><![CDATA[< Google Map]]></string>
