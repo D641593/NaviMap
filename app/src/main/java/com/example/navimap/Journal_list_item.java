@@ -12,6 +12,12 @@ public class Journal_list_item {
         this.title = null;
         id += 1;
     }
+    public Journal_list_item(int item_index, String imageName, String title){
+        this.item_index = getId()+1;
+        this.imageName = null;
+        this.title = null;
+        id += 1;
+    }
     public Journal_list_item(String imageName, String title){
         this.item_index = getId()+1;
         this.imageName = imageName;

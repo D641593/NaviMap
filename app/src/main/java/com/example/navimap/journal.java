@@ -74,6 +74,9 @@ public class journal extends AppCompatActivity {
     private JournalAdapter journal_adapter;
     private PhotoSave photo= new PhotoSave();
 
+    //DataBase
+    private journalDBManager dbManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +86,8 @@ public class journal extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),markerName,Toast.LENGTH_SHORT).show();
 
         journal_list = findViewById(R.id.journalList);
-        journal_adapter = new JournalAdapter(this, R.layout.journal_item, main_list);
+        initList();
+
         create_start = findViewById(R.id.create_start);
         create_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +105,7 @@ public class journal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Journal_list_item item = main_list.get(position);
                 changeDialog(item.getImageName(), item.getTitle(), content_list.get(position));
-                imageName = item.getImageName();
+//                imageName = item.getImageName();
                 journal_item_position = position;
                 is_item_change = true;
                 diashow();
@@ -212,7 +216,6 @@ public class journal extends AppCompatActivity {
         } else {
             journal_image.setImageResource(R.mipmap.ic_launcher);
         }
-        System.out.println("Im Here\n" + imageName);
 
     }
     private void initdeleteDialog(){
@@ -266,6 +269,13 @@ public class journal extends AppCompatActivity {
                         tmp.setImageName(imageName);
                         journal_image.setImageResource(R.mipmap.ic_launcher);
                     }
+
+                    dbManager.create(tmp.getItem_index(),
+                                     tmp.getImageName(),
+                                     tmp.getTitle(),
+                                     journal_content.getText().toString().trim());
+                    System.out.println("create" + journal_content.getText().toString().trim());
+                    dbManager.show();
                     main_list.add(tmp);
                 }
                 else {
@@ -281,10 +291,17 @@ public class journal extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"內容不能為空",Toast.LENGTH_SHORT).show();
                     }
 
-                    if(main_list.get(journal_item_position).getImageName() != null){
+                    if(imageName != null){
                         main_list.get(journal_item_position).setImageName(imageName);
                         journal_image.setImageResource(R.mipmap.ic_launcher);
+                        imageName = null;
                     }
+                    dbManager.change(journal_item_position,
+                                    main_list.get(journal_item_position).getImageName(),
+                                    journal_title.getText().toString().trim(),
+                                    journal_content.getText().toString().trim());
+                    System.out.println("Change");
+                    dbManager.show();
                 }
                 dialog.dismiss();
                 journal_list.setAdapter(journal_adapter);
@@ -317,6 +334,17 @@ public class journal extends AppCompatActivity {
     }
 
 
+    public void initList(){
+
+        dbManager = new journalDBManager(journal.this, markerName);
+        journalDBManager.list list = dbManager.initList();
+        main_list =  list.journal_list;
+        content_list = list.content;
+        journal_adapter = new JournalAdapter(this, R.layout.journal_item, main_list);
+        journal_list.setAdapter(journal_adapter);
+        System.out.println("InitList");
+        dbManager.show();
+    }
 
 //    ---------------------------------methods below-----------------------------
 
