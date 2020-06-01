@@ -59,7 +59,7 @@ class journalDBManager {
         this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
         database = dbHelper.getReadableDatabase();
         String[] columns={dbHelper.get_id(),dbHelper.getIMAGENAME(), dbHelper.getTITLE()};
-        Cursor cursor = database.query(this.tableName,columns,null,null,null,null,null);
+        Cursor cursor = database.query(this.tableName, columns,null,null,null,null,null);
         while (cursor.moveToNext()){
             Journal_list_item tmp = new Journal_list_item(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
             t.content.add(cursor.getString(3));

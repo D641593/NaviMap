@@ -95,7 +95,7 @@ public class journal extends AppCompatActivity {
                 is_item_change = false;
                 imageName = null;
                 journal_item_position = 0;
-                initDia();
+                initDialog();
                 diashow();
             }
         });
@@ -193,7 +193,7 @@ public class journal extends AppCompatActivity {
 //        });
     }
 
-    public void initDia(){
+    public void initDialog(){
         dialog = new Dialog(this);
         dialog.setTitle("新增遊記");
         dialog.setContentView(R.layout.journal_add_dialog);
