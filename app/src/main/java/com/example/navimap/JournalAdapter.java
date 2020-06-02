@@ -34,8 +34,7 @@ public class JournalAdapter extends ArrayAdapter<Journal_list_item> {
 // 根據老師資料設定ImageView和TextView的展現
         if (item.getImageName() != null) {
             imageView.setBackground(null);
-            imageView.setImageBitmap(p.getPhoto(item.getImageName()));
-            System.out.println("Im Here\n" + item.getImageName());
+            imageView.setImageBitmap(p.getPhoto(item.getImageName(), journal.markerName));
         }
         else {
             imageView.setImageResource(R.mipmap.ic_launcher);

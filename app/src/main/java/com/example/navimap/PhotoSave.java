@@ -62,7 +62,7 @@ public class PhotoSave extends FragmentActivity {
 
     public String save(Bitmap bitmap, String pictureName){
 
-        String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+        String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/" + pictureName;
         File filePath = new File(file);
         if (!filePath.exists()) {
             filePath.mkdir();
@@ -98,10 +98,10 @@ public class PhotoSave extends FragmentActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public Bitmap getPhoto(String file)
+    public Bitmap getPhoto(String file, String markerName)
     {
         try {
-            String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/";
+            String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/" + markerName + "/";
             Bitmap bitmap = BitmapFactory.decodeFile(s + file);
             return bitmap;
         }
@@ -111,4 +111,5 @@ public class PhotoSave extends FragmentActivity {
             return null;
         }
     }
+
 }

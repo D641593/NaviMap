@@ -13,9 +13,9 @@ public class Journal_list_item {
         id += 1;
     }
     public Journal_list_item(int item_index, String imageName, String title){
-        this.item_index = getId()+1;
-        this.imageName = null;
-        this.title = null;
+        this.item_index = item_index;
+        this.imageName = imageName;
+        this.title = title;
         id += 1;
     }
     public Journal_list_item(String imageName, String title){
@@ -24,7 +24,9 @@ public class Journal_list_item {
         this.title = title;
         id += 1;
     }
-    private int getId(){
+
+
+    public int getId(){
         return this.id;
     }
     public int getItem_index(){
@@ -35,6 +37,10 @@ public class Journal_list_item {
     }
     public String getTitle(){
         return this.title;
+    }
+
+    public void resetID(){
+        id = 0;
     }
 
     public void setId(){

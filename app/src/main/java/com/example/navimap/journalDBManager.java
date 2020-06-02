@@ -30,10 +30,9 @@ class journalDBManager {
 
     public journalDBManager(Context c, String markerName){
         this.context = c;
-        this.tableName = markerName;
+        this.tableName = "J_"+ markerName;
         this.dbHelper = new journalSQLiteHelper(this.context, markerName);
-        dbHelper.close();
-
+//        dbHelper.close();
     }
 
 
@@ -47,35 +46,29 @@ class journalDBManager {
 
     public list initList(){
 //        dbHelper.set_TableName(this.tableName);
-//        try {
-//
-//        } catch (Exception e){
-//            dbHelper.onCreate(database);
-//            database.close();
-//            return t;
-//        }
-        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
-        database = dbHelper.getReadableDatabase();
-        String[] columns={dbHelper.get_id(),dbHelper.getIMAGENAME(), dbHelper.getTITLE()};
-        Cursor cursor = database.query(this.tableName, columns,null,null,null,null,null);
-        while (cursor.moveToNext()){
-            Journal_list_item tmp = new Journal_list_item(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-            t.content.add(cursor.getString(3));
-            t.journal_list.add(tmp);
-//            int id = cursor.getInt(0);
-//            String imageName = cursor.getString(1);
-//            String title = cursor.getString(2);
-//            String content = cursor.getString(3);
-//            resultData.append(id).append(": ");
-//            resultData.append(name).append(": ");
-//            resultData.append(tel).append(": ");
-//            resultData.append(email).append("\n");
-        }
+        try {
 
-        cursor.close();
-        database.close();
-        dbHelper.close();
-        return t;
+            database = dbHelper.getReadableDatabase();
+            String[] columns={dbHelper.get_id(),dbHelper.getIMAGENAME(), dbHelper.getTITLE(), dbHelper.getCONTENT()};
+            Cursor cursor = database.query(this.tableName, columns,null,null,null,null,null);
+            while (cursor.moveToNext()){
+                Journal_list_item tmp = new Journal_list_item(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+                t.content.add(cursor.getString(3));
+                t.journal_list.add(tmp);
+            }
+
+            cursor.close();
+            database.close();
+            return t;
+        } catch (Exception e){
+            dbHelper.onCreate(database);
+            database.close();
+            return t;
+        }
+//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
+
+//        dbHelper.close();
+//        return t;
 
 
 //        String select = "Select IMAGENAME, TITLE ";
@@ -88,7 +81,7 @@ class journalDBManager {
 
     public void create(int id, String imageName, String title, String content){
 //        dbHelper.set_TableName(this.tableName);
-        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
+//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
         database = dbHelper.getWritableDatabase();
 
         ContentValues values=new ContentValues();
@@ -99,28 +92,30 @@ class journalDBManager {
         contentValue.put(dbHelper.getCONTENT(), content);
         this.database.insert(this.tableName, null, contentValue);
         database.close();
-        dbHelper.close();
+//        dbHelper.close();
     }
 
     public void change(int id, String imageName, String title, String content){
 //        dbHelper.set_TableName(this.tableName);
-        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
+//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
         database = dbHelper.getWritableDatabase();
 
         String update = "UPDATE " + this.tableName + " SET ";
-        String attr = "_IMAGENAME = " + imageName
-                    + " _TITLE = " + title
-                    + " _CONTENT = " + content;
+        String attr = "_IMAGENAME = " + "'" + imageName + "'"
+                    + ", _TITLE = " + "'" + title + "'"
+                    + ", _CONTENT = "  + "'" + content + "'";
         String condition = " WHERE _id = " + id;
+
         String sql = update + attr + condition;
+        System.out.println(sql);
 
         database.execSQL(sql);
         database.close();
-        dbHelper.close();
+//        dbHelper.close();
     }
 
     public void show(){
-        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
+//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
         database = dbHelper.getReadableDatabase();  //取得查詢物件Cursor
         String[] columns={dbHelper.get_id(),dbHelper.getIMAGENAME(), dbHelper.getTITLE(), dbHelper.getCONTENT()};
         Cursor cursor = database.query(this.tableName,columns,null,null,null,null,null);
@@ -134,7 +129,7 @@ class journalDBManager {
         }
         cursor.close();
         database.close();
-        dbHelper.close();
+//        dbHelper.close();
     }
 
     public void close(){

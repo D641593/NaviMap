@@ -45,7 +45,8 @@ public class journal extends AppCompatActivity {
     private ListView journal_list;
 
     //暫存值
-    private String imageName = null, markerName = null;
+    private String imageName = null;
+    public static String markerName = null;
     private Boolean is_item_change = false;
     private int journal_item_position = 0;
     private Intent intent = new Intent();
@@ -71,6 +72,7 @@ public class journal extends AppCompatActivity {
 
         journal_list = findViewById(R.id.journalList);
         initList();
+        initDia();
 
         create_start = findViewById(R.id.create_start);
         create_start.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +129,20 @@ public class journal extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try{
+            main_list.get(0).resetID();
+            main_list.clear();
+            content_list.clear();
+            System.out.println("I am DESTROY!!!!!!!!!!!!!");
+            return;
+        } catch (Exception e){
+            return;
+        }
+    }
+
     public void initDia(){
         dialog = new Dialog(this);
         dialog.setTitle("新增遊記");
@@ -146,7 +162,7 @@ public class journal extends AppCompatActivity {
         journal_content.setText(contentName);
         if(imageName != null){
             journal_image.setBackground(null);
-            journal_image.setImageBitmap(photo.getPhoto(imageName));
+            journal_image.setImageBitmap(photo.getPhoto(imageName, markerName));
         } else {
             journal_image.setImageResource(R.mipmap.ic_launcher);
         }
@@ -204,12 +220,13 @@ public class journal extends AppCompatActivity {
                         journal_image.setImageResource(R.mipmap.ic_launcher);
                     }
 
-//                    dbManager.create(tmp.getItem_index(),
-//                                     tmp.getImageName(),
-//                                     tmp.getTitle(),
-//                                     journal_content.getText().toString().trim());
+
                     System.out.println("create" + journal_content.getText().toString().trim());
-//                    dbManager.show();
+                    dbManager.create(tmp.getItem_index(),
+                            tmp.getImageName(),
+                            tmp.getTitle(),
+                            journal_content.getText().toString().trim());
+                    dbManager.show();
                     main_list.add(tmp);
                 }
                 else {
@@ -230,12 +247,12 @@ public class journal extends AppCompatActivity {
                         journal_image.setImageResource(R.mipmap.ic_launcher);
                         imageName = null;
                     }
-//                    dbManager.change(journal_item_position,
-//                                    main_list.get(journal_item_position).getImageName(),
-//                                    journal_title.getText().toString().trim(),
-//                                    journal_content.getText().toString().trim());
+                    dbManager.change(journal_item_position+1,
+                                    main_list.get(journal_item_position).getImageName(),
+                                    journal_title.getText().toString().trim(),
+                                    journal_content.getText().toString().trim());
                     System.out.println("Change");
-//                    dbManager.show();
+                    dbManager.show();
                 }
                 dialog.dismiss();
                 journal_list.setAdapter(journal_adapter);
@@ -270,14 +287,15 @@ public class journal extends AppCompatActivity {
 
     public void initList(){
 
-//        dbManager = new journalDBManager(journal.this, markerName);
-//        journalDBManager.list list = dbManager.initList();
-//        main_list =  list.journal_list;
-//        content_list = list.content;
+        dbManager = new journalDBManager(journal.this, markerName);
+        journalDBManager.list list = dbManager.initList();
+        main_list = new ArrayList<Journal_list_item>(list.journal_list);
+        content_list = new ArrayList<String>(list.content);
         journal_adapter = new JournalAdapter(this, R.layout.journal_item, main_list);
         journal_list.setAdapter(journal_adapter);
-//        System.out.println("InitList");
-//        dbManager.show();
+        System.out.println("InitList");
+
+        dbManager.show();
     }
 
 

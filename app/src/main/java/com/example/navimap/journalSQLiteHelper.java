@@ -9,7 +9,7 @@ class journalSQLiteHelper extends SQLiteOpenHelper {
     private final static int _DBVersion = 1; //版本
     private final static String _DBName = "JournalList.db";// 資料庫 name
 
-    private static String _TableName = "";// 資料表 name
+    private static String _TableName = "J";// 資料表 name
     private static String _ID = "_id";
     private static String IMAGENAME = "_IMAGENAME";
     private static String TITLE = "_TITLE";
@@ -17,7 +17,12 @@ class journalSQLiteHelper extends SQLiteOpenHelper {
 
     public journalSQLiteHelper(Context context, String tableName) {
         super(context, _DBName, null, _DBVersion); //給 SQLiteOpenHelper construct
-        _TableName = tableName;
+        _TableName = "J_" + tableName;
+//        _ID = tableName+"_id";
+//        IMAGENAME = tableName+"_IMAGENAME";
+//        TITLE = tableName+"_TITLE";
+//        CONTENT = tableName+"_CONTENT";
+
         // TODO Auto-generated constructor stub
     }
 
