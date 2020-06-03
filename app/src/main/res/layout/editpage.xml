@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center|start"
-        android:text="@string/google_map"
+        android:text="@string/BackToGoogle"
         android:visibility="visible"
         tools:layout_conversion_absoluteHeight="0dp"
         tools:layout_conversion_absoluteWidth="0dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
+
     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

@@ -62,13 +62,13 @@ public class PhotoSave extends FragmentActivity {
 
     public String save(Bitmap bitmap, String pictureName){
 
-        String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+        String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/" + pictureName;
         File filePath = new File(file);
         if (!filePath.exists()) {
             filePath.mkdir();
         }
 
-        File finalImageFile = new File(filePath,  pictureName + id + ".jpg");
+        File finalImageFile = new File(filePath,  pictureName +"_"+ id + ".jpg");
         if (finalImageFile.exists()) {
             finalImageFile.delete();
         }
@@ -93,34 +93,17 @@ public class PhotoSave extends FragmentActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        id++;
-        return finalImageFile.getAbsolutePath();
+
+        return pictureName +"_"+ id++ + ".jpg";
     }
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public ArrayList<Bitmap> getPhoto(String file)
+    public Bitmap getPhoto(String file, String markerName)
     {
         try {
-//            File[] sd = getExternalFilesDirs("DIRECTORY_PICTURES"); 內部
-            String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/";
-//            File sd = new File(s);
-//            File[] t = sd.listFiles();
-            ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
-            bitmapArray.add(BitmapFactory.decodeFile(s + file));
-//            System.out.println(t);
-//            for (int i = 0; i < t.length; i++) {
-//                if (!t[i].isDirectory()) {
-//                    System.out.println(i + "\n");
-//                    System.out.println(t[i]);
-//                    image = findViewById(R.id.image);
-//                    Bitmap bitmap = BitmapFactory.decodeFile(t[i].getAbsolutePath());
-//                    image.setImageBitmap(bitmap);
-//                }
-//            }
-//            return null;
-            return bitmapArray;
+            String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/" + markerName + "/";
+            Bitmap bitmap = BitmapFactory.decodeFile(s + file);
+            return bitmap;
         }
         catch (Exception e)
         {

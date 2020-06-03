@@ -1,21 +1,10 @@
 package com.example.navimap;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
-import android.media.Image;
-
-import android.graphics.BitmapFactory;
 
 import android.net.Uri;
 import android.os.Build;
@@ -26,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,13 +23,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -101,6 +85,16 @@ public class notePage extends AppCompatActivity {
         setContentView(R.layout.note_edit_page);
         initItem();
         setItem();
+//        Rlayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(v instanceof ImageView){
+//                    ImageView IV = (ImageView) contents.get(v);
+//                    Rlayout.removeView(v);
+//                }
+//                return;
+//            }
+//        });
     }
 
     private void initItem(){
@@ -353,13 +347,24 @@ public class notePage extends AppCompatActivity {
                 Rlayout.removeView(editText);
             }
         }
+//        if(contents.size()>0 && contents.get(contents.size()-1).first instanceof ImageView){
+//            final ImageView imageV = (ImageView) contents.get(contents.size()-1).first;
+//            imageV.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    contents.remove(contents.size()-1);
+//                    Rlayout.removeView(imageV);
+//                    return false;
+//                }
+//            });
+//        }
         ImageView image = new ImageView(this);
         image.setOnLongClickListener(imageLis);
         image.setImageURI(uri);
         image.setPadding(10,10,10,10);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
         image.setLayoutParams(layoutParams);
-        contents.add(new Pair<View,String>(image,uri.toString()));
+        contents.add(new Pair<View,String>(image, uri.toString()));
         Rlayout.addView(image);
         if(addEditFlag) {
             addEditText("");

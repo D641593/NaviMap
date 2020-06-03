@@ -39,6 +39,7 @@ public class EditPage extends AppCompatActivity{
     private SwipeMenuListView mListView;
     private tinyDB DB;
     private noteDB notedb;
+    private journalSQLiteHelper journaldb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,10 +150,14 @@ public class EditPage extends AppCompatActivity{
     private void deleteDB(String title){
         SQLiteDatabase db = DB.getWritableDatabase();
         SQLiteDatabase ndb = notedb.getWritableDatabase();
+        journaldb = new journalSQLiteHelper(this, title);
+        SQLiteDatabase jdb = journaldb.getWritableDatabase();
         db.delete(DB.getTableName(),"_title = '"+title + "';",null);
         ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
+        jdb.execSQL("DROP TABLE IF EXISTS " + journaldb.get_TableName());
         db.close();
         ndb.close();
+        jdb.close();
         //刪除時要改資料庫
     }
 
