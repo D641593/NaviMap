@@ -49,22 +49,6 @@ class journalSQLiteHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void set_TableName(String tableName){
-        _TableName = tableName;
-    }
-    public void set_id(String id){
-        _ID = id;
-    }
-    public void setTITLE(String title){
-        TITLE = title;
-    }
-    public void setCONTENT(String content){
-        CONTENT = content;
-    }
-    public void setIMAGENAME(String imagename){
-        IMAGENAME = imagename;
-    }
-
     public String get_TableName(){
         return _TableName;
     }

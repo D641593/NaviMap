@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int deleteID;
     private tinyDB DB;
     private noteDB notedb;
+    private journalSQLiteHelper journaldb;
     private String dbTitle = "";
     private double lati,longi;
     private int dbID;
@@ -420,10 +421,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void DBdelete(String title){
         SQLiteDatabase db = DB.getWritableDatabase();
         SQLiteDatabase ndb = notedb.getWritableDatabase();
+        journaldb = new journalSQLiteHelper(this, title);
+        SQLiteDatabase jdb = journaldb.getWritableDatabase();
         db.delete(DB.getTableName(),"_title = '"+title + "';",null);
         ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
+        jdb.execSQL("DROP TABLE IF EXISTS " + journaldb.get_TableName());
         db.close();
         ndb.close();
+        jdb.close();
         DBshow();
 
     }

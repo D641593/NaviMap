@@ -1,6 +1,7 @@
 package com.example.navimap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,13 @@ public class JournalAdapter extends ArrayAdapter<Journal_list_item> {
 // 根據老師資料設定ImageView和TextView的展現
         if (item.getImageName() != null) {
             imageView.setBackground(null);
-            imageView.setImageBitmap(p.getPhoto(item.getImageName(), journal.markerName));
+            Bitmap bitmap = p.getPhoto(item.getImageName(), journal.markerName);
+            if(bitmap != null){
+                imageView.setImageBitmap(bitmap);
+            } else {
+                imageView.setImageResource(R.mipmap.ic_launcher);
+            }
+
         }
         else {
             imageView.setImageResource(R.mipmap.ic_launcher);

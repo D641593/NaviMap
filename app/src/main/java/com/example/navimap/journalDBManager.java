@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,30 +23,13 @@ class journalDBManager {
     }
 
 
-//    public journalDBManager(Context c){
-//        this.context = c;
-//
-//        this.dbHelper = new journalSQLiteHelper(this.context);
-//    }
-
     public journalDBManager(Context c, String markerName){
         this.context = c;
         this.tableName = "J_"+ markerName;
         this.dbHelper = new journalSQLiteHelper(this.context, markerName);
-//        dbHelper.close();
     }
 
-
-
-//    public void open() throws SQLException{
-//        dbHelper.set_TableName(this.tableName);
-//        this.dbHelper = new journalSQLiteHelper(this.context);
-////        this.database = this.dbHelper.getWritableDatabase(); //等等用 db.exec("...")
-////        return this;
-//    }
-
     public list initList(){
-//        dbHelper.set_TableName(this.tableName);
         try {
 
             database = dbHelper.getReadableDatabase();
@@ -65,26 +49,12 @@ class journalDBManager {
             database.close();
             return t;
         }
-//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
-
-//        dbHelper.close();
-//        return t;
-
-
-//        String select = "Select IMAGENAME, TITLE ";
-//        String from = "from " + this.tableName;
-//        String where = "where name like ? ";
-//        String sql = select + from;
-//        Cursor cursor = db.rawQuery(sql, selectionArgs);
     }
 
 
     public void create(int id, String imageName, String title, String content){
-//        dbHelper.set_TableName(this.tableName);
-//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
         database = dbHelper.getWritableDatabase();
 
-        ContentValues values=new ContentValues();
         ContentValues contentValue = new ContentValues();//一個等等寫入sql的集合
         contentValue.put(dbHelper.get_id(), id);
         contentValue.put(dbHelper.getIMAGENAME(), imageName);
@@ -92,12 +62,9 @@ class journalDBManager {
         contentValue.put(dbHelper.getCONTENT(), content);
         this.database.insert(this.tableName, null, contentValue);
         database.close();
-//        dbHelper.close();
     }
 
     public void change(int id, String imageName, String title, String content){
-//        dbHelper.set_TableName(this.tableName);
-//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
         database = dbHelper.getWritableDatabase();
 
         String update = "UPDATE " + this.tableName + " SET ";
@@ -111,77 +78,38 @@ class journalDBManager {
 
         database.execSQL(sql);
         database.close();
-//        dbHelper.close();
     }
 
-    public void show(){
-//        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
+    public void show() {
         database = dbHelper.getReadableDatabase();  //取得查詢物件Cursor
-        String[] columns={dbHelper.get_id(),dbHelper.getIMAGENAME(), dbHelper.getTITLE(), dbHelper.getCONTENT()};
-        Cursor cursor = database.query(this.tableName,columns,null,null,null,null,null);
-        while (cursor.moveToNext()){
+        String[] columns = {dbHelper.get_id(), dbHelper.getIMAGENAME(), dbHelper.getTITLE(), dbHelper.getCONTENT()};
+        Cursor cursor = database.query(this.tableName, columns, null, null, null, null, null);
+        while (cursor.moveToNext()) {
             System.out.println("Data base show");
             System.out.println(this.tableName);
             System.out.println("ID : " + cursor.getInt(0));
-            System.out.println("ImageName : " +cursor.getString(1));
-            System.out.println("title : " +cursor.getString(2));
-            System.out.println("content : " +cursor.getString(3));
+            System.out.println("ImageName : " + cursor.getString(1));
+            System.out.println("title : " + cursor.getString(2));
+            System.out.println("content : " + cursor.getString(3));
         }
         cursor.close();
         database.close();
-//        dbHelper.close();
     }
-
     public void close(){
         this.dbHelper.close();
     }
+    public void delete(long id){
+        this.dbHelper = new journalSQLiteHelper(this.context, this.tableName);
+        database = dbHelper.getWritableDatabase();
+        database.delete(this.tableName, "_id = " + id, null);
 
-//    public void insert(String NoteTitle, String NoteContent){
-//        ContentValues contentValue = new ContentValues();//一個等等寫入sql的集合
-//        contentValue.put(journalSQLiteHelper.get, NoteTitle);
-//        contentValue.put(journalSQLiteHelper.CONTENT, NoteContent);
-//        this.database.insert(journalSQLiteHelper._TableName, null, contentValue);
-//    }
-//
-//    //Cursor 幫忙處理 query後的資料包, 因為query結果可能不只一個
-//    public Cursor fetch(){
-//        //select "_TITLE", "_CONTENT" from "JournalNote" (where:"N/A", orderby:"N/A", having:"N/A")
-//        Cursor cursor = this.database.query(journalSQLiteHelper._TableName, new String[]{journalSQLiteHelper._ID, journalSQLiteHelper.TITLE, journalSQLiteHelper.CONTENT}, null, null,null, null ,null);
-//        if(cursor != null){
-//            cursor.moveToFirst();
-//        }
-//        return cursor;
-//    }
-//    public Cursor fetchcolumns(String[] columnsContent){
-//        //select "_TITLE", "_CONTENT" from "JournalNote" (where:"N/A", orderby:"N/A", having:"N/A")
-//        Cursor cursor = this.database.query(journalSQLiteHelper._TableName, columnsContent, null, null,null, null ,null);
-//        if(cursor != null){
-//            cursor.moveToFirst();
-//        }
-//        return cursor;
-//    }
-//    public Cursor fetchAllArgs(String tableName, String[] columnsContent, String where, String[] whereArgs, String groupby, String having, String orderby){
-//        //select "_TITLE", "_CONTENT" from "JournalNote" (where:"N/A", orderby:"N/A", having:"N/A")
-//        Cursor cursor = this.database.query(tableName, columnsContent, where, whereArgs,groupby, having ,orderby);
-//        if(cursor != null){
-//            cursor.moveToFirst();
-//        }
-//        return cursor;
-//    }
-//
-//    public int update(long _id, String NoteTitle, String NoteContent){
-//        ContentValues contentValue = new ContentValues();
-//        contentValue.put(journalSQLiteHelper.TITLE, NoteTitle);
-//        contentValue.put(journalSQLiteHelper.CONTENT, NoteContent);
-//        return this.database.update(journalSQLiteHelper._TableName, contentValue, "_id = " + _id, null);
-//    }
-//
-//    public void delete(long _id){
-//        this.database.delete(journalSQLiteHelper._TableName, "_id = " + _id , null);
-//    }
-//
-//    public void deleteAll(){
-////        database.execSQL("DELETE FROM " + SQLiteHelper._TableName);
-//        this.database.delete(journalSQLiteHelper._TableName, null, null);
-//    }
+        String update = "UPDATE " + this.tableName + " SET ";
+        String attr = "_id = _id - 1";
+        String condition = " WHERE _id > " + id;
+        String sql = update + attr + condition;
+        database.execSQL(sql);
+
+        database.close();
+    }
+
 }

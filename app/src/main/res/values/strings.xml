@@ -25,10 +25,11 @@
 
 
     <string name="create_journal">新增遊記</string>
+    <string name="BackToGoogle">返回 Google Map</string>
 
     <string name="title_activity_maps">Map</string>
     <string name="edit">Edit</string>
-    <string name="google_map"><![CDATA[< Google Map]]></string>
+<!--    <string name="google_map"><![CDATA[< Google Map]]></string>-->
 
     <string name="saveBtnText">儲存</string>
     <string name="action_gallery">加入圖片</string>

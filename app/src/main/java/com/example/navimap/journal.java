@@ -41,7 +41,7 @@ public class journal extends AppCompatActivity {
     private ImageView journal_image;
 
     //main.xml
-    private Button create_start;
+    private Button create_start, back_btn;
     private ListView journal_list;
 
     //暫存值
@@ -73,6 +73,15 @@ public class journal extends AppCompatActivity {
         journal_list = findViewById(R.id.journalList);
         initList();
         initDia();
+
+        back_btn = findViewById(R.id.BacKToMap);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.setClass(journal.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         create_start = findViewById(R.id.create_start);
         create_start.setOnClickListener(new View.OnClickListener() {
@@ -106,10 +115,13 @@ public class journal extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         content_list.remove(position);
+
+                        main_list.get(0).setId();
                         main_list.remove(position);
-                        if(main_list.size()!= 0){
-                            resetIndex(position);
-                        }
+                        resetIndex(position);
+
+                        dbManager.delete(position+1);
+                        dbManager.show();
                         journal_list.setAdapter(journal_adapter);
                         dialog.dismiss();
 
@@ -136,6 +148,7 @@ public class journal extends AppCompatActivity {
             main_list.get(0).resetID();
             main_list.clear();
             content_list.clear();
+            dbManager.close();
             System.out.println("I am DESTROY!!!!!!!!!!!!!");
             return;
         } catch (Exception e){
@@ -193,7 +206,7 @@ public class journal extends AppCompatActivity {
         for(int i=position ;i<main_list.size();i++){
             main_list.get(i).setItem_index();
         }
-        main_list.get(0).setId();
+//        main_list.get(0).setId();
     }
 
     public void diashow(){
