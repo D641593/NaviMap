@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -60,7 +61,38 @@ public class notePage extends AppCompatActivity {
     private Spinner unit;
     private LinearLayout Rlayout;
     private ArrayList<Pair<View,String>> contents = new ArrayList<>();
-    private boolean changeFlag = false;
+    private AlertDialog.Builder alertDialog;
+    private int contentToDelete;
+    private ImageView.OnLongClickListener imageLis =  new ImageView.OnLongClickListener(){
+
+        @Override
+        public boolean onLongClick(View v) {
+            for (int i=0;i<contents.size();i++){
+                if(contents.get(i).first == v){
+                    System.out.println("Here I am");
+                    contentToDelete = i;
+                }
+            }
+            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ImageView deleteImage = (ImageView) contents.get(contentToDelete).first;
+                    deleteImage.setImageURI(null);
+                    contents.remove(contentToDelete);
+                    Rlayout.removeView(deleteImage);
+                }
+            });
+            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alertDialog.show();
+            return true;
+        };
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -79,6 +111,9 @@ public class notePage extends AppCompatActivity {
         titleIntent = getIntent();
         title = titleIntent.getStringExtra("Title");
         Rlayout = findViewById(R.id.RLayout);
+        alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("刪除圖片!");
+        alertDialog.setMessage("要刪除這張圖片嗎?");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -130,9 +165,9 @@ public class notePage extends AppCompatActivity {
                     }
                     db.insert(DB.getTableName(), null, values);
                     values.clear();
-                    Toast.makeText(getApplicationContext(), "儲存成功", Toast.LENGTH_SHORT).show();
                     i++;
                 }
+                Toast.makeText(getApplicationContext(), "儲存成功", Toast.LENGTH_SHORT).show();
                 DBShow();
                 db.close();
             }
@@ -319,6 +354,7 @@ public class notePage extends AppCompatActivity {
             }
         }
         ImageView image = new ImageView(this);
+        image.setOnLongClickListener(imageLis);
         image.setImageURI(uri);
         image.setPadding(10,10,10,10);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);

@@ -61,6 +61,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLData;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageButton btn_search;
     private int id;
     private SearchView searchView;
+    private ArrayList<Marker> markers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +248,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initMenuAndMarker();
+    }
+
     private void shortDistance(){
         SQLiteDatabase db = DB.getReadableDatabase();
         Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
@@ -273,6 +281,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initMenuAndMarker(){
         Menu m = navigationView.getMenu();
+        m.clear();
+        for(int i=0;i<markers.size();i++){
+            markers.get(i).remove();
+        }
+        markers.clear();
         SQLiteDatabase db = DB.getReadableDatabase();
         Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
         c.moveToFirst();
@@ -283,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             longi = c.getDouble(3);
             m.add(R.id.sideList,dbID,0,dbTitle).setIcon(R.drawable.ic_marker_location);
             System.out.println("add Menu item : " + dbTitle);
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lati,longi)).title(dbTitle).draggable(true));
+            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lati,longi)).title(dbTitle).draggable(true)));
             System.out.println("add Marker : " + dbTitle + " Lati : " + String.valueOf(lati) + " longi : " + String.valueOf(longi));
             c.moveToNext();
         }
@@ -522,11 +535,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(title.getText().toString().isEmpty()){
                             Toast.makeText(getApplicationContext(),"can't empty",Toast.LENGTH_SHORT).show();
                         }else {
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(title.getText().toString()).draggable(true));
-                            writable = true;
-                            DBadd(title.getText().toString(), latLng.latitude, latLng.longitude);
-                            supportInvalidateOptionsMenu();
-                            dialog.dismiss();
+                            SQLiteDatabase db = DB.getReadableDatabase();
+                            Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _title = '" + title.getText().toString() + "';",null);
+                            if (!c.moveToFirst()){
+                                googleMap.addMarker(new MarkerOptions().position(latLng).title(title.getText().toString()).draggable(true));
+                                writable = true;
+                                DBadd(title.getText().toString(), latLng.latitude, latLng.longitude);
+                                supportInvalidateOptionsMenu();
+                                dialog.dismiss();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"標題名稱不可重複",Toast.LENGTH_SHORT).show();
+                            }
+
 
                         }
                     }
