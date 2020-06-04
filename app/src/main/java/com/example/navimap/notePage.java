@@ -1,7 +1,9 @@
 package com.example.navimap;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -85,16 +87,6 @@ public class notePage extends AppCompatActivity {
         setContentView(R.layout.note_edit_page);
         initItem();
         setItem();
-//        Rlayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(v instanceof ImageView){
-//                    ImageView IV = (ImageView) contents.get(v);
-//                    Rlayout.removeView(v);
-//                }
-//                return;
-//            }
-//        });
     }
 
     private void initItem(){
@@ -347,17 +339,6 @@ public class notePage extends AppCompatActivity {
                 Rlayout.removeView(editText);
             }
         }
-//        if(contents.size()>0 && contents.get(contents.size()-1).first instanceof ImageView){
-//            final ImageView imageV = (ImageView) contents.get(contents.size()-1).first;
-//            imageV.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    contents.remove(contents.size()-1);
-//                    Rlayout.removeView(imageV);
-//                    return false;
-//                }
-//            });
-//        }
         ImageView image = new ImageView(this);
         image.setOnLongClickListener(imageLis);
         image.setImageURI(uri);
