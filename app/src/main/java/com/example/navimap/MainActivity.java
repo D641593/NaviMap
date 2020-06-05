@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int id;
     private SearchView searchView;
     private ArrayList<Marker> markers = new ArrayList<>();
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         floatingActionButtonSetting();
 
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -253,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onRestart() {
         super.onRestart();
         initMenuAndMarker();
+        drawer.closeDrawers();
     }
 
     private void shortDistance(){
