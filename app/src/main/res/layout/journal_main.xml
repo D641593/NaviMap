@@ -11,12 +11,12 @@
 <!--        layout="@layout/journal_bar"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:layout_width="match_parent"/>-->
-    <Button
-        android:id="@+id/BacKToMap"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center|left"
-        android:text="@string/BackToGoogle" />
+<!--    <Button-->
+<!--        android:id="@+id/BacKToMap"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:gravity="center|left"-->
+<!--        android:text="@string/BackToGoogle" />-->
 
     <ListView
         android:id="@+id/journalList"

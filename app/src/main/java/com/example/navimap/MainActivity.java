@@ -1,6 +1,7 @@
 package com.example.navimap;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -188,12 +189,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         addressList = geocoder.getFromLocationName(location,1);
                         Address address = addressList.get(0);
                         LatLng latLng =  new LatLng(address.getLatitude(), address.getLongitude());
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16));
+                        getCurrentFocus().clearFocus();
                     } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    finally{
                         Toast.makeText(getApplicationContext(),"找不到位置",Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                         return false;
                     }
 

@@ -1,5 +1,6 @@
 package com.example.navimap;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,6 +49,9 @@ public class EditPage extends AppCompatActivity{
         setContentView(R.layout.editpage);
         DB = new tinyDB(this);
         notedb = new noteDB(this);
+
+        getSupportActionBar().setTitle("編輯頁面");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mListView = (SwipeMenuListView) findViewById(R.id.listView);
 
@@ -128,12 +133,19 @@ public class EditPage extends AppCompatActivity{
                 return false;
             }
         });
-        Button back = (Button) findViewById(R.id.BackToGoogle);
-        back.setOnClickListener(GoBack);
+//        Button back = (Button) findViewById(R.id.BackToGoogle);
+//        back.setOnClickListener(GoBack);
 
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void CatchDB(){
         SQLiteDatabase db = DB.getReadableDatabase();
