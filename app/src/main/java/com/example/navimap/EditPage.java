@@ -18,9 +18,11 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.baoyz.swipemenulistview.BaseSwipListAdapter;
@@ -105,6 +107,13 @@ public class EditPage extends AppCompatActivity{
 
 
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String title = markerList.get(position);
+                Toast.makeText(getApplicationContext(),markerList.get(position),Toast.LENGTH_SHORT).show();
+            }
+        });
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
@@ -125,8 +134,8 @@ public class EditPage extends AppCompatActivity{
                         markerList.remove(position);
                         //通知监听者数据集发生改变，更新ListView界面
                         mListView.setAdapter(mAdapter);
-
                         break;
+
                 }
                 // true：其他已打开的列表项的菜单状态将保持原样，不会受到其他列表项的影响而自动收回
                 // false:已打开的列表项的菜单将自动收回
