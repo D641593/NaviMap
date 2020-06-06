@@ -29,16 +29,16 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity android:name=".EditPage"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".EditPage"
-            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".notePage"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme"/>
@@ -46,7 +46,7 @@
             android:name=".journal"
             android:theme="@style/AppTheme"/>
             <!--android:theme="@style/AppTheme.NoActionBar"/>-->
-        <activity android:name=".journalContent"/>
+        <activity android:name=".SwitchPage"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -9,121 +9,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:orientation="horizontal">
 
-
-        <EditText
-            android:id="@+id/num_year"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal" />
         <TextView
-            android:id="@+id/year"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="年" />
+            android:id="@+id/start"
+            android:layout_width="80pt"
+            android:layout_height="50dp"
+            android:gravity="center|start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:text="@string/start_date" />
 
-        <EditText
-            android:id="@+id/num_month"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-        <TextView
-            android:id="@+id/month"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="月" />
-
-
-        <EditText
-            android:id="@+id/num_day"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-        <TextView
-            android:id="@+id/day"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="日" />
-
-        <EditText
-            android:id="@+id/num_hour"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-        <TextView
-            android:id="@+id/hour"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="點" />
-
-        <EditText
-            android:id="@+id/num_min"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-
-        <TextView
-            android:id="@+id/min"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-
-            android:gravity="center"
-            android:text="分" />
-
-
+        <Button
+            android:id="@+id/choise_start"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/select_date"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:gravity="center">
-
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/end"
+            android:layout_width="80pt"
+            android:layout_height="50dp"
+            android:gravity="center|start"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:text="離結束還有"/>
-        <EditText
-            android:id="@+id/during"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberDecimal"/>
+            android:text="@string/end_date" />
 
-        <Spinner
-            android:id="@+id/unit"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:entries="@array/timeMenu"/>
+        <Button
+            android:id="@+id/choise_end"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/select_date"/>
 
     </LinearLayout>
     <Button
         android:id="@+id/calender_add"
         android:hint="新增日期"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/calender_cancel"
         android:hint="取消"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"/>
 
 
 
