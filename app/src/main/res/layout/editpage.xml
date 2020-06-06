@@ -23,8 +23,13 @@
     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/create_travel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="新增旅遊企劃"/>
 
 
 </LinearLayout>

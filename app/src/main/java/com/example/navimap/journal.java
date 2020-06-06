@@ -93,22 +93,22 @@ public class journal extends AppCompatActivity {
 //        });
 
         create_start = findViewById(R.id.create_start);
-        create_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                is_item_change = false;
-                imageName = null;
-                journal_item_position = 0;
-                initDia();
-                diashow();
-            }
-        });
+//        create_start.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                is_item_change = false;
+//                imageName = null;
+//                journal_item_position = 0;
+//                initDia();
+//                diashow();
+//            }
+//        });
         journal_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Journal_list_item item = main_list.get(position);
-                changeDialog(item.getImageName(), item.getTitle(), content_list.get(position));
+                changeDialog(item.getImageName(), item.getTitle(), item.getContent());
 //                imageName = item.getImageName();
                 journal_item_position = position;
                 is_item_change = true;
@@ -183,7 +183,11 @@ public class journal extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.journal_menu_newjournal_button) {
-            ;
+            is_item_change = false;
+            imageName = null;
+            journal_item_position = 0;
+            initDia();
+            diashow();
         } else if(item.getItemId() == R.id.journal_menu_album_button){
             ;
         }else if(item.getItemId() == R.id.journal_menu_takepicture_button){
@@ -201,7 +205,7 @@ public class journal extends AppCompatActivity {
         try{
             main_list.get(0).resetID();
             main_list.clear();
-            content_list.clear();
+//            content_list.clear();
             dbManager.close();
             System.out.println("I am DESTROY!!!!!!!!!!!!!");
             return;
@@ -279,7 +283,7 @@ public class journal extends AppCompatActivity {
                         return;
                     }
                     if(!journal_content.getText().toString().isEmpty()){
-                        content_list.add(journal_content.getText().toString().trim());
+                        tmp.setContent(journal_content.getText().toString());
                     } else {
                         Toast.makeText(getApplicationContext(),"內容不能為空",Toast.LENGTH_SHORT).show();
                         return;
@@ -294,7 +298,7 @@ public class journal extends AppCompatActivity {
                     dbManager.create(tmp.getItem_index(),
                             tmp.getImageName(),
                             tmp.getTitle(),
-                            journal_content.getText().toString().trim());
+                            tmp.getContent());
                     dbManager.show();
                     main_list.add(tmp);
                 }
@@ -306,8 +310,7 @@ public class journal extends AppCompatActivity {
                         return;
                     }
                     if(!journal_content.getText().toString().isEmpty()){
-                        content_list.remove(journal_item_position);
-                        content_list.add(journal_item_position, journal_content.getText().toString().trim());
+                        main_list.get(journal_item_position).setContent(journal_content.getText().toString().trim());
                     } else {
                         Toast.makeText(getApplicationContext(),"內容不能為空",Toast.LENGTH_SHORT).show();
                         return;
@@ -352,16 +355,15 @@ public class journal extends AppCompatActivity {
             }
         });
 
-
     }
 
 
     public void initList(){
 
         dbManager = new journalDBManager(journal.this, markerName);
-        journalDBManager.list list = dbManager.initList();
-        main_list = new ArrayList<Journal_list_item>(list.journal_list);
-        content_list = new ArrayList<String>(list.content);
+        List<Journal_list_item> list = dbManager.initList();
+        main_list = new ArrayList<>(list);
+//        content_list = new ArrayList<String>(list.content);
         journal_adapter = new JournalAdapter(this, R.layout.journal_item, main_list);
         journal_list.setAdapter(journal_adapter);
         System.out.println("InitList");

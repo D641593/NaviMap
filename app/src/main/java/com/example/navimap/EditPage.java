@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +46,10 @@ public class EditPage extends AppCompatActivity{
     private tinyDB DB;
     private noteDB notedb;
     private journalSQLiteHelper journaldb;
+    private Button travel;
+    private Dialog add_travel;
+    private EditText travel_name;
+    private Button travel_create, travel_cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +58,46 @@ public class EditPage extends AppCompatActivity{
         DB = new tinyDB(this);
         notedb = new noteDB(this);
 
-        getSupportActionBar().setTitle("編輯頁面");
+        getSupportActionBar().setTitle("旅遊企劃");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        travel = findViewById(R.id.create_travel);
         mListView = (SwipeMenuListView) findViewById(R.id.listView);
 
+
+        initDialog();
         CatchDB();
         mAdapter = new AppAdapter();
         mListView.setAdapter(mAdapter);
+
+        travel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add_travel.show();
+                travel_create.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!travel_name.getText().toString().isEmpty()){
+                            markerList.add(travel_name.getText().toString().trim());
+                            mListView.setAdapter(mAdapter);
+                            travel_name.setText("");
+                            add_travel.dismiss();
+                            return;
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),"名稱不能為空",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                travel_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        travel_name.setText("");
+                        add_travel.dismiss();
+                        return;
+                    }
+                });
+            }
+        });
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -111,7 +149,12 @@ public class EditPage extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String title = markerList.get(position);
-                Toast.makeText(getApplicationContext(),markerList.get(position),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setClass(EditPage.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Name",title);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
@@ -142,12 +185,19 @@ public class EditPage extends AppCompatActivity{
                 return false;
             }
         });
-//        Button back = (Button) findViewById(R.id.BackToGoogle);
-//        back.setOnClickListener(GoBack);
-
     }
 
+    public void initDialog(){
+        add_travel = new Dialog(this);
+        add_travel.setTitle("新增旅行企劃");
+        add_travel.setContentView(R.layout.dialoglayout);
+        travel_name = add_travel.findViewById(R.id.title);
+        travel_create = add_travel.findViewById(R.id.btn_add);
+        travel_create.setText("新增旅行企劃");
+        travel_cancel = add_travel.findViewById(R.id.btn_cancel);
+    }
     @Override
+
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
             finish();
@@ -198,14 +248,6 @@ public class EditPage extends AppCompatActivity{
         startActivity(intent);
     }
 
-    private View.OnClickListener GoBack = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent();
-            intent.setClass(EditPage.this,MainActivity.class);
-            startActivity(intent);
-        }
-    };
 
     class AppAdapter extends BaseSwipListAdapter {
         @Override

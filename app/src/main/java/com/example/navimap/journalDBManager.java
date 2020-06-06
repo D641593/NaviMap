@@ -16,11 +16,12 @@ class journalDBManager {
     private SQLiteDatabase database;
     private journalSQLiteHelper dbHelper;
     private String tableName;
-    private list t = new list();
-    class list{
-        List<Journal_list_item> journal_list = new ArrayList<>();
-        List<String> content = new ArrayList<>();
-    }
+    private List<Journal_list_item> t = new ArrayList<>();
+//    private list t = new list();
+//    class list{
+//        List<Journal_list_item> journal_list = new ArrayList<>();
+//        List<String> content = new ArrayList<>();
+//    }
 
 
     public journalDBManager(Context c, String markerName){
@@ -29,16 +30,17 @@ class journalDBManager {
         this.dbHelper = new journalSQLiteHelper(this.context, markerName);
     }
 
-    public list initList(){
+    public List<Journal_list_item> initList(){
         try {
 
             database = dbHelper.getReadableDatabase();
             String[] columns={dbHelper.get_id(),dbHelper.getIMAGENAME(), dbHelper.getTITLE(), dbHelper.getCONTENT()};
             Cursor cursor = database.query(this.tableName, columns,null,null,null,null,null);
             while (cursor.moveToNext()){
-                Journal_list_item tmp = new Journal_list_item(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-                t.content.add(cursor.getString(3));
-                t.journal_list.add(tmp);
+                Journal_list_item tmp = new Journal_list_item(cursor.getInt(cursor.getColumnIndex(dbHelper.get_id())), cursor.getString(cursor.getColumnIndex(dbHelper.getIMAGENAME())), cursor.getString(cursor.getColumnIndex(dbHelper.getTITLE())), cursor.getString(cursor.getColumnIndex(dbHelper.getCONTENT())));
+//                t.content.add(cursor.getString(3));
+//                t.journal_list.add(tmp);
+                t.add(tmp);
             }
 
             cursor.close();

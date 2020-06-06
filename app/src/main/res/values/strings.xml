@@ -35,6 +35,10 @@
     <string name="action_gallery">加入圖片</string>
     <string name="action_time">時間提醒</string>
 
+    <string name="start_date">起始日期:</string>
+    <string name="end_date">結束日期:</string>
+    <string name="select_date">選擇日期</string>
+    <string name="check">確認</string>
     <string name="bottomNotePageTitle">旅遊規劃</string>
     <string name="bottonGoogleMapTitle">GoogleMap</string>
     <string name="bottonJournalPageTitle">旅行日記</string>
