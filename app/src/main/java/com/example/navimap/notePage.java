@@ -26,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -55,6 +54,7 @@ public class notePage extends AppCompatActivity {
     private ArrayList<Pair<View,String>> contents = new ArrayList<>();
     private AlertDialog.Builder alertDialog;
     private int contentToDelete;
+    private BottomNavigationView btmView;
     private ImageView.OnLongClickListener imageLis =  new ImageView.OnLongClickListener(){
 
         @Override
@@ -106,6 +106,7 @@ public class notePage extends AppCompatActivity {
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("刪除圖片!");
         alertDialog.setMessage("要刪除這張圖片嗎?");
+        btmView = findViewById(R.id.navigationBottomView);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -166,6 +167,32 @@ public class notePage extends AppCompatActivity {
         });
         c.close();
         db.close();
+        btmView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int ID = item.getItemId();
+                if( ID == R.id.NotePageItem){
+                    // Do nothing
+                    System.out.println("NotePage");
+                }else if( ID == R.id.GoogleMapItem ){
+                    System.out.println("GoogleMap");
+                    Intent intent = new Intent(notePage.this,MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name",title);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if( ID == R.id.JournalPageItem){
+                    System.out.println("Journal");
+                    Intent intent = new Intent(notePage.this,journal.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name",title);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                System.out.println("Selected btm");
+                return true;
+            }
+        });
     }
 
     private void DBShow(){
@@ -181,6 +208,12 @@ public class notePage extends AppCompatActivity {
         }
 
     }
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        System.out.println("Restart");
+        btmView.getMenu().getItem(0).setChecked(true);
+    }
 
 
     @Override
@@ -191,11 +224,11 @@ public class notePage extends AppCompatActivity {
     }
 
     @Override
-
     public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId() == R.id.action_gallery){
+        int ID = item.getItemId();
+        if(ID == R.id.action_gallery){
             openGallery();
-        }else if(item.getItemId() == R.id.action_time){
+        }else if(ID == R.id.action_time){
             init_calendar_dialog();
             init_calendar_show();
             calendar.show();
@@ -253,7 +286,7 @@ public class notePage extends AppCompatActivity {
                     calendar.dismiss();
                 }
             });
-        }else if(item.getItemId() == android.R.id.home){
+        }else if( ID == android.R.id.home){
             finish();
             return true;
         }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/NotePageItem"
+        android:icon="@drawable/ic_bottom_note"
+        android:title="@string/bottomNotePageTitle"/>
+    <item
+        android:id="@+id/GoogleMapItem"
+        android:icon="@drawable/ic_marker_location"
+        android:title="@string/bottonGoogleMapTitle"/>
+    <item
+        android:id="@+id/JournalPageItem"
+        android:icon="@drawable/ic_bottom_journal"
+        android:title="@string/bottonJournalPageTitle"/>
+</menu>
