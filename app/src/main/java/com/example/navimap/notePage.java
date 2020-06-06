@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,9 +26,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -41,10 +44,13 @@ public class notePage extends AppCompatActivity {
     private Intent titleIntent;
 
     //    Calendar dialog
-    private Dialog calendar;
-    private EditText year, month, day, hour, min, during;
-    private Button calendar_add, calendar_cancel;
-    private Spinner unit;
+    private Dialog calendar, calendar_show;
+    private TextView start_date, end_date, check_date, cancel_date;
+    private Button calendar_add, calendar_cancel, choise_start, choise_end;
+    private Calendar beginTime = Calendar.getInstance(), endTime = Calendar.getInstance();
+    private CalendarView calendarView;
+    private SimpleDateFormat sdf = new SimpleDateFormat("E yyyy/MM/dd");
+
     private LinearLayout Rlayout;
     private ArrayList<Pair<View,String>> contents = new ArrayList<>();
     private AlertDialog.Builder alertDialog;
@@ -191,85 +197,59 @@ public class notePage extends AppCompatActivity {
             openGallery();
         }else if(item.getItemId() == R.id.action_time){
             init_calendar_dialog();
+            init_calendar_show();
             calendar.show();
+            choise_start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    calendar_show.show();
+                    calendar_show.setTitle("設定起始時間");
+                    calendarShow(0);
+                }
+            });
+            choise_end.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    calendar_show.show();
+                    calendar_show.setTitle("設定結束時間");
+                    calendarShow(1);
+                }
+            });
+
+
             calendar_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //建立事件開始時間
-                    if(checkEditNull()){
-                        Toast.makeText(getApplicationContext(),"不能有空",Toast.LENGTH_SHORT).show();
+                    if(beginTime.getTime().after(endTime.getTime())){
+                        Toast.makeText(getApplicationContext(),"結束時間不能早於起始時間",Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    else {
-                        Calendar now = Calendar.getInstance();
-                        int y = Integer.parseInt(year.getText().toString().trim());
-                        if (y < now.get(Calendar.YEAR)) {
-                            Toast.makeText(getApplicationContext(), "時間回不去了", Toast.LENGTH_SHORT).show();
-                            clearEdit(year);
-                        } else if (y >= now.get(Calendar.YEAR) + 100) {
-                            Toast.makeText(getApplicationContext(), "你真的能活這麼久??", Toast.LENGTH_SHORT).show();
-                            clearEdit(year);
-                        } else {
-                            int m = Integer.parseInt(month.getText().toString().trim());
-                            int d = Integer.parseInt(day.getText().toString().trim());
-                            int h = Integer.parseInt(hour.getText().toString().trim());
-                            int minute = Integer.parseInt(min.getText().toString().trim());
-                            int monment = Integer.parseInt(during.getText().toString().trim());
+                    //建立 CalendarIntentHelper 實體
+                    CalendarIntentHelper calIntent = new CalendarIntentHelper();
+                    //設定值
+                    calIntent.setTitle(title);
+                    //calIntent.setDescription(saveContent);
+                    calIntent.setBeginTimeInMillis(beginTime.getTimeInMillis());
+                    calIntent.setEndTimeInMillis(endTime.getTimeInMillis());
+                    //                            calIntent.setLocation("事件地點");
 
-                            Calendar beginTime = Calendar.getInstance();
-                            beginTime.set(y, m - 1, d, h, minute);
+                    //全部設定好後就能夠取得 Intent
+                    Intent intent = calIntent.getIntentAfterSetting();
 
-                            switch (unit.getSelectedItemPosition()){
-                                case 3:
-                                    y += monment;
-                                    if( y >= now.get(Calendar.YEAR) + 100){
-                                        Toast.makeText(getApplicationContext(),"你活不了這麼久",Toast.LENGTH_SHORT).show();
-                                        clearEdit(during);
-                                        return;
-                                    }
-                                    break;
-                                case 2:
-                                    m += monment;
-                                    break;
-                                case 1:
-                                    d += monment;
-                                    break;
-                                case 0:
-                                    h += monment;
-                                    break;
+                    //送出意圖
 
-                            }
-
-                            //建立事件結束時間
-                            Calendar endTime = Calendar.getInstance();
-
-                            endTime.set(y, m - 1, d, h, minute);
-
-                            //建立 CalendarIntentHelper 實體
-                            CalendarIntentHelper calIntent = new CalendarIntentHelper();
-                            //設定值
-                            calIntent.setTitle(title);
-                            //calIntent.setDescription(saveContent);
-                            calIntent.setBeginTimeInMillis(beginTime.getTimeInMillis());
-                            calIntent.setEndTimeInMillis(endTime.getTimeInMillis());
-                            //                            calIntent.setLocation("事件地點");
-
-                            //全部設定好後就能夠取得 Intent
-                            Intent intent = calIntent.getIntentAfterSetting();
-
-                            //送出意圖
-                            startActivity(intent);
-
-                            clearEdit("All");
-                            calendar.dismiss();
-                        }
-                    }
+                    startActivity(intent);
+                    start_date.setText(R.string.start_date);
+                    end_date.setText(R.string.end_date);
+                    calendar.dismiss();
 
                 }
             });
             calendar_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clearEdit("All");
+                    start_date.setText(R.string.start_date);
+                    end_date.setText(R.string.end_date);
                     calendar.dismiss();
                 }
             });
@@ -281,42 +261,86 @@ public class notePage extends AppCompatActivity {
     }
 
 
+    public void calendarShow(final int i){
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                System.out.println(year +"\n"+ month +"\n"+ dayOfMonth);
+                switch (i){
+                    case 0:
+                        beginTime.set(year,month,dayOfMonth);
+                        break;
+                    case 1:
+                        endTime.set(year,month,dayOfMonth);
+                        break;
+                }
+
+            }
+        });
+        check_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                now.add(Calendar.DATE,-1);
+                switch (i){
+                    case 0:
+                        if (beginTime.getTime().before(now.getTime())){
+                            Toast.makeText(getApplicationContext(),"時間是無法回去的",Toast.LENGTH_SHORT).show();
+                            beginTime.clear();
+                            return;
+                        }
+                        start_date.setText("起始時間: " + sdf.format(beginTime.getTime()));
+                        break;
+                    case 1:
+                        if (endTime.getTime().before(now.getTime())){
+                            Toast.makeText(getApplicationContext(),"時間是無法回去的",Toast.LENGTH_SHORT).show();
+                            endTime.clear();
+                            return;
+                        }
+                        end_date.setText("結束時間: " + sdf.format(endTime.getTime()));
+                        break;
+                }
+
+
+                calendar_show.dismiss();
+            }
+        });
+        cancel_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar_show.dismiss();
+                switch (i){
+                    case 0:
+                        beginTime.clear();
+                        break;
+                    case 1:
+                        endTime.clear();
+                        break;
+                }
+                return;
+            }
+
+        });
+    }
+
+    public void init_calendar_show(){
+        calendar_show = new Dialog(this);
+        calendar_show.setContentView(R.layout.calendar);
+        calendarView = calendar_show.findViewById(R.id.calendarView);
+        check_date = calendar_show.findViewById(R.id.date_check);
+        cancel_date = calendar_show.findViewById(R.id.date_cancel);
+    }
     public void init_calendar_dialog(){
         calendar = new Dialog(this);
         calendar.setTitle("Add time!");
         calendar.setContentView(R.layout.calender_add);
-        year = (EditText)calendar.findViewById(R.id.num_year);
-        month = (EditText)calendar.findViewById(R.id.num_month);
-        day = (EditText)calendar.findViewById(R.id.num_day);
-        hour = (EditText)calendar.findViewById(R.id.num_hour);
-        min = (EditText)calendar.findViewById(R.id.num_min);
-        during = (EditText)calendar.findViewById(R.id.during);
-        unit = (Spinner)calendar.findViewById(R.id.unit);
+        start_date = calendar.findViewById(R.id.start);
+        end_date = calendar.findViewById(R.id.end);
+        choise_start = calendar.findViewById(R.id.choise_start);
+        choise_end = calendar.findViewById(R.id.choise_end);
         calendar_add = (Button)calendar.findViewById(R.id.calender_add);
         calendar_cancel = (Button)calendar.findViewById(R.id.calender_cancel);
-    }
-
-    public boolean checkEditNull(){
-        if(year.getText().toString().isEmpty() || month.getText().toString().isEmpty() || day.getText().toString().isEmpty()
-                || hour.getText().toString().isEmpty() || min.getText().toString().isEmpty() || during.getText().toString().isEmpty()){
-            return true;
-        }
-        return false;
-    }
-
-    public void clearEdit(EditText text){
-        text.setText("");
-    }
-
-    public void clearEdit(String all){
-        if(all.equals("All")){
-            year.setText("");
-            month.setText("");
-            day.setText("");
-            hour.setText("");
-            min.setText("");
-            during.setText("");
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
