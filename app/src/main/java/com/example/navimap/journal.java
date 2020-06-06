@@ -1,5 +1,6 @@
 package com.example.navimap;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +29,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,20 +72,22 @@ public class journal extends AppCompatActivity {
         setContentView(R.layout.journal_main);
         intent = getIntent();
         markerName = intent.getStringExtra("Name");
-        Toast.makeText(getApplicationContext(),markerName,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),markerName,Toast.LENGTH_SHORT).show();
 
         journal_list = findViewById(R.id.journalList);
         initList();
         initDia();
+        getSupportActionBar().setTitle(markerName);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        back_btn = findViewById(R.id.BacKToMap);
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent.setClass(journal.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+//        back_btn = findViewById(R.id.BacKToMap);
+//        back_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                intent.setClass(journal.this, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         create_start = findViewById(R.id.create_start);
         create_start.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +145,29 @@ public class journal extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.journal_navimenu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.journal_menu_newjournal_button) {
+            ;
+        } else if(item.getItemId() == R.id.journal_menu_album_button){
+            ;
+        }else if(item.getItemId() == R.id.journal_menu_takepicture_button){
+            ;
+        }else if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -183,7 +212,7 @@ public class journal extends AppCompatActivity {
     }
     private void initdeleteDialog(){
         alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle("刪除標記點!");
+        alertDialog.setTitle("刪除遊記!");
         alertDialog.setMessage("你確定要刪除嗎?");
     }
 
@@ -222,11 +251,13 @@ public class journal extends AppCompatActivity {
                         tmp.setTitle(journal_title.getText().toString().trim());
                     } else {
                         Toast.makeText(getApplicationContext(),"主題不能為空",Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if(!journal_content.getText().toString().isEmpty()){
                         content_list.add(journal_content.getText().toString().trim());
                     } else {
                         Toast.makeText(getApplicationContext(),"內容不能為空",Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if(imageName != null){
                         tmp.setImageName(imageName);
@@ -247,12 +278,14 @@ public class journal extends AppCompatActivity {
                         main_list.get(journal_item_position).setTitle(journal_title.getText().toString().trim());
                     } else {
                         Toast.makeText(getApplicationContext(),"主題不能為空",Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if(!journal_content.getText().toString().isEmpty()){
                         content_list.remove(journal_item_position);
                         content_list.add(journal_item_position, journal_content.getText().toString().trim());
                     } else {
                         Toast.makeText(getApplicationContext(),"內容不能為空",Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                     if(imageName != null){

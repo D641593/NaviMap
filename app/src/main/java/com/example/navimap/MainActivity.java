@@ -1,6 +1,7 @@
 package com.example.navimap;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int id;
     private SearchView searchView;
     private ArrayList<Marker> markers = new ArrayList<>();
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,12 +190,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         addressList = geocoder.getFromLocationName(location,1);
                         Address address = addressList.get(0);
                         LatLng latLng =  new LatLng(address.getLatitude(), address.getLongitude());
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16));
+                        getCurrentFocus().clearFocus();
                     } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    finally{
                         Toast.makeText(getApplicationContext(),"找不到位置",Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                         return false;
                     }
 
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         floatingActionButtonSetting();
 
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -253,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onRestart() {
         super.onRestart();
         initMenuAndMarker();
+        drawer.closeDrawers();
     }
 
     private void shortDistance(){
