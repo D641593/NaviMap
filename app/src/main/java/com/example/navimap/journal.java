@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,6 +29,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,11 +145,25 @@ public class journal extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.journal_navimenu,menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if(item.getItemId() == R.id.journal_menu_newjournal_button) {
+            ;
+        } else if(item.getItemId() == R.id.journal_menu_album_button){
+            ;
+        }else if(item.getItemId() == R.id.journal_menu_takepicture_button){
+            ;
+        }else if(item.getItemId() == android.R.id.home){
             finish();
             return true;
         }
