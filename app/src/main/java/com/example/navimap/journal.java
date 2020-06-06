@@ -66,6 +66,9 @@ public class journal extends AppCompatActivity {
     //DataBase
     private journalDBManager dbManager;
 
+    //bottomNavigationBar
+    private BottomNavigationView btmView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,7 +147,29 @@ public class journal extends AppCompatActivity {
                 return true;
             }
         });
-
+        btmView = findViewById(R.id.navigationBottomView);
+        btmView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int ID = item.getItemId();
+                if( ID == R.id.NotePageItem){
+                    Intent intent = new Intent(journal.this,notePage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Title",markerName);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if( ID == R.id.GoogleMapItem ){
+                    Intent intent = new Intent(journal.this,MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name",markerName);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if( ID == R.id.JournalPageItem){
+                    // Do nothing
+                }
+                return true;
+            }
+        });
 
     }
 

@@ -6,18 +6,15 @@
         android:id="@+id/journal_menu_newjournal_button"
         android:enabled="true"
         android:icon="@drawable/journal_addcontenticon"
-        android:title="@string/journal_newjournal"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/journal_menu_album_button"
         android:enabled="true"
         android:icon="@drawable/journal_albumicon"
-        android:title="@string/journal_album"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/journal_menu_takepicture_button"
         android:enabled="true"
         android:icon="@drawable/journal_photoicon"
-        android:title="@string/journal_takepicture"
         app:showAsAction="ifRoom" />
 </menu>
