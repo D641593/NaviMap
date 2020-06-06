@@ -1,7 +1,9 @@
 package com.example.navimap;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -47,6 +52,7 @@ public class notePage extends AppCompatActivity {
     private ArrayList<Pair<View,String>> contents = new ArrayList<>();
     private AlertDialog.Builder alertDialog;
     private int contentToDelete;
+    private BottomNavigationView btmView;
     private ImageView.OnLongClickListener imageLis =  new ImageView.OnLongClickListener(){
 
         @Override
@@ -85,16 +91,6 @@ public class notePage extends AppCompatActivity {
         setContentView(R.layout.note_edit_page);
         initItem();
         setItem();
-//        Rlayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(v instanceof ImageView){
-//                    ImageView IV = (ImageView) contents.get(v);
-//                    Rlayout.removeView(v);
-//                }
-//                return;
-//            }
-//        });
     }
 
     private void initItem(){
@@ -108,6 +104,7 @@ public class notePage extends AppCompatActivity {
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("刪除圖片!");
         alertDialog.setMessage("要刪除這張圖片嗎?");
+        btmView = findViewById(R.id.navigationBottomView);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -168,6 +165,32 @@ public class notePage extends AppCompatActivity {
         });
         c.close();
         db.close();
+        btmView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int ID = item.getItemId();
+                if( ID == R.id.NotePageItem){
+                    // Do nothing
+                    System.out.println("NotePage");
+                }else if( ID == R.id.GoogleMapItem ){
+                    System.out.println("GoogleMap");
+                    Intent intent = new Intent(notePage.this,MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name",title);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if( ID == R.id.JournalPageItem){
+                    System.out.println("Journal");
+                    Intent intent = new Intent(notePage.this,journal.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name",title);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                System.out.println("Selected btm");
+                return true;
+            }
+        });
     }
 
     private void DBShow(){
@@ -183,6 +206,12 @@ public class notePage extends AppCompatActivity {
         }
 
     }
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        System.out.println("Restart");
+        btmView.getMenu().getItem(0).setChecked(true);
+    }
 
 
     @Override
@@ -193,11 +222,11 @@ public class notePage extends AppCompatActivity {
     }
 
     @Override
-
     public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId() == R.id.action_gallery){
+        int ID = item.getItemId();
+        if(ID == R.id.action_gallery){
             openGallery();
-        }else if(item.getItemId() == R.id.action_time){
+        }else if(ID == R.id.action_time){
             init_calendar_dialog();
             calendar.show();
             calendar_add.setOnClickListener(new View.OnClickListener() {
@@ -281,7 +310,7 @@ public class notePage extends AppCompatActivity {
                     calendar.dismiss();
                 }
             });
-        }else if(item.getItemId() == android.R.id.home){
+        }else if( ID == android.R.id.home){
             finish();
             return true;
         }
@@ -347,17 +376,6 @@ public class notePage extends AppCompatActivity {
                 Rlayout.removeView(editText);
             }
         }
-//        if(contents.size()>0 && contents.get(contents.size()-1).first instanceof ImageView){
-//            final ImageView imageV = (ImageView) contents.get(contents.size()-1).first;
-//            imageV.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    contents.remove(contents.size()-1);
-//                    Rlayout.removeView(imageV);
-//                    return false;
-//                }
-//            });
-//        }
         ImageView image = new ImageView(this);
         image.setOnLongClickListener(imageLis);
         image.setImageURI(uri);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,32 +11,47 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/scrollViewPaddingTop"
-        android:paddingTop="@dimen/scrollViewPaddingTop"
         android:paddingLeft="@dimen/scrollViewPaddingLeft"
-        android:paddingRight="@dimen/scrollViewPaddingLeft">
+        android:paddingTop="@dimen/scrollViewPaddingTop"
+        android:paddingRight="@dimen/scrollViewPaddingLeft"
+        android:paddingBottom="@dimen/scrollViewPaddingTop"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
         <LinearLayout
+            android:id="@+id/RLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/RLayout"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <Button
+        android:id="@+id/saveBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/saveBtn_layout"
-        android:padding="10dp"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/saveBtn"
-            android:text="@string/saveBtnText"
-            android:textColor="@color/btnTextColor"
-            android:background="@drawable/btn_shape"
-            android:textSize="20dp"/>
-    </RelativeLayout>
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_shape"
+        android:text="@string/saveBtnText"
+        android:textColor="@color/btnTextColor"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigationBottomView"
+        app:layout_constraintRight_toRightOf="parent" />
 
-</RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationBottomView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@color/cardview_light_background"
+        app:itemTextColor="@color/cardview_light_background"
+        app:menu="@menu/bottom_item"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

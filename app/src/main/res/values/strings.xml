@@ -34,5 +34,8 @@
     <string name="saveBtnText">儲存</string>
     <string name="action_gallery">加入圖片</string>
     <string name="action_time">時間提醒</string>
+    <string name="bottomNotePageTitle">旅遊規劃</string>
+    <string name="bottonGoogleMapTitle">GoogleMap</string>
+    <string name="bottonJournalPageTitle">旅行日記</string>
 
 </resources>
