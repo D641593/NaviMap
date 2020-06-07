@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         DB = new tinyDB(this);
+//        DB.onUpgrade(DB.getWritableDatabase(),1,1);
         DB.onCreate(DB.getWritableDatabase());
         notedb = new noteDB(this);
         notedb.onCreate(notedb.getWritableDatabase());
