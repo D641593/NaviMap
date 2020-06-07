@@ -27,6 +27,7 @@ class tinyDB extends SQLiteOpenHelper {
         final String SQL = "create table if not exists " + TableName + "( " +
                 "_id integer primary key autoincrement, " +
                 "_title varchar(50), " +
+                "_markerName varchar(50), " +
                 "_latitude double," +
                 "_longitude double" + ");";
         db.execSQL(SQL);

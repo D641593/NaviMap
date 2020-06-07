@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DrawerLayout drawer;
     private BottomNavigationView btmView;
     private String journalName;
+    private final int latiIndex = 3;
+    private final int longIndex = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,8 +263,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     SQLiteDatabase db = DB.getReadableDatabase();
                     Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _id = " + id + ";",null);
                     c.moveToFirst();
-                    lati = c.getDouble(2);
-                    longi = c.getDouble(3);
+                    lati = c.getDouble(latiIndex);
+                    longi = c.getDouble(longIndex);
 
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(lati,longi)).zoom(16).build();
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -291,8 +293,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String name = null;
         while (!c.isAfterLast()){
 
-            lati = c.getDouble(2);
-            longi = c.getDouble(3);
+            lati = c.getDouble(latiIndex);
+            longi = c.getDouble(longIndex);
             System.out.println(longi+ "\n" + lati);
             float[] result = new float[1];
             Location.distanceBetween(nowLocation.latitude, nowLocation.longitude, lati, longi, result);
@@ -316,13 +318,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         markers.clear();
         SQLiteDatabase db = DB.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
+        String SQLinst = "select * from " + DB.getTableName() + " where _title = '" + journalName + "';";
+        Cursor c = db.rawQuery(SQLinst,null);
+        if(c == null){
+            System.out.println("c is null");
+        }
         c.moveToFirst();
         while(!c.isAfterLast()){
             dbID = c.getInt(0);
-            dbTitle = c.getString(1);
-            lati = c.getDouble(2);
-            longi = c.getDouble(3);
+            dbTitle = c.getString(2);
+            lati = c.getDouble(latiIndex);
+            longi = c.getDouble(longIndex);
             m.add(R.id.sideList,dbID,0,dbTitle).setIcon(R.drawable.ic_marker_location);
             System.out.println("add Menu item : " + dbTitle);
             markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lati,longi)).title(dbTitle).draggable(true)));
@@ -345,7 +351,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 SQLiteDatabase db = DB.getWritableDatabase();
                 ContentValues markerValues = new ContentValues();
                 System.out.println("marker" + marker.getTitle() + marker.getPosition().toString());
-                markerValues.put("_title",marker.getTitle());
+                markerValues.put("_title",journalName);
+                markerValues.put("_markerName",marker.getTitle());
                 markerValues.put("_latitude",marker.getPosition().latitude);
                 markerValues.put("_longitude",marker.getPosition().longitude);
                 String[] para = new String[]{marker.getId()};
@@ -386,8 +393,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 SQLiteDatabase db = DB.getReadableDatabase();
                 Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _id = " + id + ";",null);
                 c.moveToFirst();
-                lati = c.getDouble(2);
-                longi = c.getDouble(3);
+                lati = c.getDouble(latiIndex);
+                longi = c.getDouble(longIndex);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(lati,longi)).zoom(16).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 c.close();
@@ -422,8 +429,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 SQLiteDatabase db = DB.getReadableDatabase();
                 Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _id = " + id + ";",null);
                 c.moveToFirst();
-                lati = c.getDouble(2);
-                longi = c.getDouble(3);
+                lati = c.getDouble(latiIndex);
+                longi = c.getDouble(longIndex);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(lati,longi)).zoom(16).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 c.close();
@@ -451,7 +458,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void DBadd(String Title,double latitude,double longitude){
         SQLiteDatabase db = DB.getWritableDatabase();
         ContentValues values =  new ContentValues();
-        values.put("_title",Title);
+        values.put("_title",journalName);
+        values.put("_markerName",Title);
         values.put("_latitude",latitude);
         values.put("_longitude",longitude);
         db.insert(DB.getTableName(),null,values);
@@ -464,8 +472,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SQLiteDatabase ndb = notedb.getWritableDatabase();
         journaldb = new journalSQLiteHelper(this, title);
         SQLiteDatabase jdb = journaldb.getWritableDatabase();
-        db.delete(DB.getTableName(),"_title = '"+title + "';",null);
-        ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
+        db.delete(DB.getTableName(),"_markerName = '"+title + "';",null);
+        ndb.delete(notedb.getTableName(),"_markerName = '"+title + "';",null);
         jdb.execSQL("DROP TABLE IF EXISTS " + journaldb.get_TableName());
         db.close();
         ndb.close();
@@ -476,7 +484,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private int DBsearch(String title){
         SQLiteDatabase db = DB.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _title = '" + title + "';",null);
+        Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _title = '" + journalName + "' and " + "_markerName = '" + title + "';",null);
         if(c == null){
             return -1;
         }
@@ -569,7 +577,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Toast.makeText(getApplicationContext(),"can't empty",Toast.LENGTH_SHORT).show();
                         }else {
                             SQLiteDatabase db = DB.getReadableDatabase();
-                            Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _title = '" + title.getText().toString() + "';",null);
+                            Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _title = '" + journalName + "' and " + "_markerName = '" + title.getText().toString() + "';",null);
                             if (!c.moveToFirst()){
                                 googleMap.addMarker(new MarkerOptions().position(latLng).title(title.getText().toString()).draggable(true));
                                 writable = true;
@@ -579,8 +587,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }else{
                                 Toast.makeText(getApplicationContext(),"標題名稱不可重複",Toast.LENGTH_SHORT).show();
                             }
-
-
                         }
                     }
                 });
