@@ -354,7 +354,6 @@ public class EditPage extends AppCompatActivity{
         Id = 0;
         DB.close();
         editDB.close();
-        journaldb.close();
         notedb.close();
     }
 
