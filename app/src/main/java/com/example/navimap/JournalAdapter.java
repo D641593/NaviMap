@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class JournalAdapter extends ArrayAdapter<Journal_list_item> {
@@ -32,6 +34,7 @@ public class JournalAdapter extends ArrayAdapter<Journal_list_item> {
 // 獲取ImageView和TextView
         ImageView imageView = (ImageView) oneItemView.findViewById(R.id.image_show);
         TextView textView = (TextView) oneItemView.findViewById(R.id.title_text);
+        TextView textView_journalcontent = (TextView) oneItemView.findViewById(R.id.content_text);
 // 根據老師資料設定ImageView和TextView的展現
         if (item.getImageName() != null) {
             imageView.setBackground(null);
@@ -48,6 +51,7 @@ public class JournalAdapter extends ArrayAdapter<Journal_list_item> {
         }
 
         textView.setText(item.getTitle());
+        textView_journalcontent.setText(item.getContent());
         return oneItemView;
     }
 }

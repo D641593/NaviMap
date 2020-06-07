@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -100,14 +101,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SearchView searchView;
     private ArrayList<Marker> markers = new ArrayList<>();
     private DrawerLayout drawer;
+    private BottomNavigationView btmView;
+    private String journalName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        journalName = getIntent().getStringExtra("Name");
         searchView = findViewById(R.id.sv_location);
-
+        btmView = findViewById(R.id.navigationBottomView);
+        btmView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int ID = item.getItemId();
+                if( ID == R.id.NotePageItem){
+                    Intent intent = new Intent(MainActivity.this,notePage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Title",journalName);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if( ID == R.id.GoogleMapItem ){
+                    // Do nothing
+                }else if( ID == R.id.JournalPageItem){
+                    Intent intent = new Intent(MainActivity.this,journal.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name",journalName);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                return true;
+            }
+        });
         DB = new tinyDB(this);
         DB.onCreate(DB.getWritableDatabase());
         notedb = new noteDB(this);
@@ -255,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onRestart();
         initMenuAndMarker();
         drawer.closeDrawers();
+        btmView.setSelectedItemId(R.id.GoogleMapItem);
     }
 
     private void shortDistance(){
