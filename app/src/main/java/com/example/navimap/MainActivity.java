@@ -469,17 +469,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void DBdelete(String title){
         SQLiteDatabase db = DB.getWritableDatabase();
-        SQLiteDatabase ndb = notedb.getWritableDatabase();
         journaldb = new journalSQLiteHelper(this, title);
         SQLiteDatabase jdb = journaldb.getWritableDatabase();
-        db.delete(DB.getTableName(),"_markerName = '"+title + "';",null);
-        ndb.delete(notedb.getTableName(),"_markerName = '"+title + "';",null);
+        db.delete(DB.getTableName(),"_title = '" + journalName + "' and " + "_markerName = '"+title + "';",null);
         jdb.execSQL("DROP TABLE IF EXISTS " + journaldb.get_TableName());
         db.close();
-        ndb.close();
         jdb.close();
         DBshow();
-
     }
 
     private int DBsearch(String title){
