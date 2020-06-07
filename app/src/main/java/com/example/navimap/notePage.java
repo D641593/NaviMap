@@ -296,7 +296,6 @@ public class notePage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     public void calendarShow(final int i){
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -419,7 +418,9 @@ public class notePage extends AppCompatActivity {
                 return;
             }
         }
+
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        Intent intent = new Intent(Intent.ACTION_PICK, getExter)
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
 

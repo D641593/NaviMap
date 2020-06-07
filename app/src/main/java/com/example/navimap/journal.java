@@ -8,12 +8,17 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -32,10 +37,14 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class journal extends AppCompatActivity {
+
+    private static final int REQUEST_GALLERY = 0x1001;
+    private static final int REQUEST_GALLERY_SHOWONLY = 0x1010;
 
     // add_dialog.xml
     private Dialog dialog;
@@ -45,7 +54,7 @@ public class journal extends AppCompatActivity {
     private ImageView journal_image;
 
     //main.xml
-    private Button create_start, back_btn;
+//    private Button create_start, back_btn;
     private ListView journal_list;
 
     //暫存值
@@ -89,7 +98,7 @@ public class journal extends AppCompatActivity {
 //            }
 //        });
 
-        create_start = findViewById(R.id.create_start);
+//        create_start = findViewById(R.id.create_start);
 //        create_start.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -120,7 +129,7 @@ public class journal extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        content_list.remove(position);
+//                        content_list.remove(position);
 
                         main_list.get(0).setId();
                         main_list.remove(position);
@@ -157,16 +166,25 @@ public class journal extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        新增遊記
         if(item.getItemId() == R.id.journal_menu_newjournal_button) {
             is_item_change = false;
             imageName = null;
             journal_item_position = 0;
             initDia();
             diashow();
+//        開啟相簿
         } else if(item.getItemId() == R.id.journal_menu_album_button){
-            ;
+            openGalleryShowOnly();
+//        拍照
         }else if(item.getItemId() == R.id.journal_menu_takepicture_button){
-            ;
+            if(!photo.hasPermission(getApplicationContext())){
+                if(photo.needCheckPermission(journal.this)){
+                    return true;
+                }
+            }
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent,0);
         }else if(item.getItemId() == android.R.id.home){
             finish();
             return true;
@@ -218,21 +236,6 @@ public class journal extends AppCompatActivity {
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("刪除遊記!");
         alertDialog.setMessage("你確定要刪除嗎?");
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            imageName = photo.save(bitmap,markerName);
-            journal_image.setBackground(null);
-            journal_image.setImageBitmap(bitmap);
-        }
-
     }
 
     public void resetIndex(int position){
@@ -320,13 +323,14 @@ public class journal extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!photo.hasPermission(getApplicationContext())){
-                    if(photo.needCheckPermission(journal.this)){
-                        return;
-                    }
-                }
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,0);
+//                if(!photo.hasPermission(getApplicationContext())){
+//                    if(photo.needCheckPermission(journal.this)){
+//                        return;
+//                    }
+//                }
+//                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(intent,0);
+                openGallery();
             }
         });
 
@@ -346,5 +350,90 @@ public class journal extends AppCompatActivity {
         dbManager.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if(requestCode == 0){
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                imageName = photo.save(bitmap,markerName);
+                journal_image.setBackground(null);
+                journal_image.setImageBitmap(bitmap);
+            }else if(requestCode == REQUEST_GALLERY){
+                Uri uri = data.getData();
+                imageName = getPath(this, uri);
+                journal_image.setImageURI(uri);
+            }
+        }
+    }
+
+//  透過 Uri 尋找該圖片的path
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private String getPath(Context context, Uri uri) {
+        String filePath = "";
+
+//        Uri為 Document類型
+//        DocumentsContract.isDocumentUri(context, uri)
+        String wholeID = DocumentsContract.getDocumentId(uri);
+        String id = wholeID.split(":")[1];
+        String[] column = { MediaStore.Images.Media.DATA };
+        String selection = MediaStore.Images.Media._ID + "=?";
+
+//        SELECT column FROM MediaStore.Images.Media.EXTERNAL_CONTENT_URI WHERE selection
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, selection, new String[]{id}, null);
+
+        if(cursor.moveToFirst()) {
+            filePath = cursor.getString(cursor.getColumnIndex(column[0]));
+        }
+        cursor.close();
+
+        return filePath;
+    }
+
+    private void openGallery() {
+        PhotoSave photoSave = new PhotoSave();
+        if(!photoSave.hasPermission(getApplicationContext())) {
+            if (photoSave.needCheckPermission(journal.this)){
+                return;
+            }
+        }
+
+        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+        File sd = new File(filePath);
+        Intent intent=new Intent(Intent.ACTION_PICK, Uri.fromFile(sd));
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
+    }
+
+    private void openGalleryShowOnly(){
+        PhotoSave photoSave = new PhotoSave();
+        if(!photoSave.hasPermission(getApplicationContext())) {
+            if (photoSave.needCheckPermission(journal.this)){
+                return;
+            }
+        }
+
+        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+        File sd = new File(filePath);
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
+        intent.setType("image/*");
+        startActivity(Intent.createChooser(intent, "Select File"));
+    }
+
+//
+//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            if (requestCode == REQUEST_GALLERY) {
+//                Uri uri = data.getData();
+//                addImage(uri,true);
+//            }
+//        }
+//    }
 
 }
