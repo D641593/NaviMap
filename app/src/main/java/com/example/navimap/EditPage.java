@@ -64,7 +64,6 @@ public class EditPage extends AppCompatActivity{
         CatchDB();
 
         getSupportActionBar().setTitle("旅遊企劃");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         travel = findViewById(R.id.create_travel);
         mListView = (SwipeMenuListView) findViewById(R.id.listView);
 
@@ -208,17 +207,6 @@ public class EditPage extends AppCompatActivity{
         travel_create.setText("新增旅行企劃");
         travel_cancel = add_travel.findViewById(R.id.btn_cancel);
     }
-    @Override
-
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
 
     private boolean storeDB(String title){
        SQLiteDatabase db = editDB.getReadableDatabase();

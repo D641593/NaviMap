@@ -642,6 +642,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(MainActivity.this,EditPage.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void onDestroy(){
         super.onDestroy();
         DB.close();

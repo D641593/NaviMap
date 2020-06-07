@@ -114,9 +114,7 @@ public class notePage extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void setItem(){
-
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("旅遊規劃 - " + title);
         SQLiteDatabase db = DB.getReadableDatabase();
         String SQLinst = "select * from " + DB.getTableName() + " where _title = '" + title + "';";
         Cursor c = db.rawQuery(SQLinst,null);
@@ -285,9 +283,6 @@ public class notePage extends AppCompatActivity {
                     calendar.dismiss();
                 }
             });
-        }else if( ID == android.R.id.home){
-            finish();
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -430,6 +425,11 @@ public class notePage extends AppCompatActivity {
                 addImage(uri,true);
             }
         }
+    }
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(notePage.this,EditPage.class);
+        startActivity(intent);
     }
 
 }
