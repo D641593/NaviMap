@@ -141,15 +141,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         notedb.onCreate(notedb.getWritableDatabase());
 
         //DBshow();
-        btn_edit = findViewById(R.id.edit);
-        btn_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this,EditPage.class);
-                startActivity(intent);
-            }
-        });
         btn_search = findViewById(R.id.mostCloseLocationSearch);
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
