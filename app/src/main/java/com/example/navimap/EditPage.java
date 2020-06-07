@@ -9,6 +9,7 @@ import android.content.Intent;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
@@ -39,7 +40,7 @@ import java.util.List;
 
 
 public class EditPage extends AppCompatActivity{
-
+    private static int Id = 0;
     private static List<String> markerList = new ArrayList<String>();
     private AppAdapter mAdapter;
     private SwipeMenuListView mListView;
@@ -50,6 +51,8 @@ public class EditPage extends AppCompatActivity{
     private Dialog add_travel;
     private EditText travel_name;
     private Button travel_create, travel_cancel;
+    private EditDB editDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +60,17 @@ public class EditPage extends AppCompatActivity{
         setContentView(R.layout.editpage);
         DB = new tinyDB(this);
         notedb = new noteDB(this);
+        editDB = new EditDB(this);
+        CatchDB();
 
         getSupportActionBar().setTitle("旅遊企劃");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         travel = findViewById(R.id.create_travel);
         mListView = (SwipeMenuListView) findViewById(R.id.listView);
 
-
         initDialog();
-        CatchDB();
         mAdapter = new AppAdapter();
         mListView.setAdapter(mAdapter);
-
+        editDB.dbshow(editDB.getReadableDatabase());
         travel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,10 +79,12 @@ public class EditPage extends AppCompatActivity{
                     @Override
                     public void onClick(View v) {
                         if(!travel_name.getText().toString().isEmpty()){
-                            markerList.add(travel_name.getText().toString().trim());
-                            mListView.setAdapter(mAdapter);
-                            travel_name.setText("");
-                            add_travel.dismiss();
+                            if(storeDB(travel_name.getText().toString().trim())){
+                                markerList.add(travel_name.getText().toString().trim());
+                                mListView.setAdapter(mAdapter);
+                                travel_name.setText("");
+                                add_travel.dismiss();
+                            }
                             return;
                         }
                         else {
@@ -173,8 +177,15 @@ public class EditPage extends AppCompatActivity{
                         break;
                     case 2:
                         // delete
-                        deleteDB(item);
+                        try{
+                            deleteDB(item);
+                        } catch (Exception e){
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                        editDB.onDelete(editDB.getWritableDatabase(), item, position);
+                        editDB.dbshow(editDB.getReadableDatabase());
                         markerList.remove(position);
+                        Id = markerList.size();
                         //通知监听者数据集发生改变，更新ListView界面
                         mListView.setAdapter(mAdapter);
                         break;
@@ -196,39 +207,59 @@ public class EditPage extends AppCompatActivity{
         travel_create.setText("新增旅行企劃");
         travel_cancel = add_travel.findViewById(R.id.btn_cancel);
     }
-    @Override
 
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    private boolean storeDB(String title){
+       SQLiteDatabase db = editDB.getReadableDatabase();
+       Cursor c = db.rawQuery("select * from " + editDB.getTableName() + " where _title = '" + title + "';",null);
+       if(!c.moveToFirst()){
+           editDB.insert(title, editDB.getWritableDatabase(), Id);
+           Id++;
+           editDB.dbshow(editDB.getReadableDatabase());
+           c.close();
+           db.close();
+           return true;
+       }
+       else{
+           Toast.makeText(getApplicationContext(),"標題名稱不可重複",Toast.LENGTH_SHORT).show();
+           c.close();
+           db.close();
+           return false;
+       }
+
     }
 
     private void CatchDB(){
-        SQLiteDatabase db = DB.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
+        SQLiteDatabase db = editDB.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from " + editDB.getTableName() + ";",null);
         c.moveToFirst();
         markerList.clear();
         while(!c.isAfterLast()){
             markerList.add(c.getString(1));
             c.moveToNext();
+            Id++;
         }
+        System.out.println(Id);
+        editDB.dbshow(db);
         c.close();
         db.close();
     }
+
     private void deleteDB(String title){
         SQLiteDatabase db = DB.getWritableDatabase();
+        db.delete(DB.getTableName(),"_title = '"+title + "';",null);
+        db.close();
+
         SQLiteDatabase ndb = notedb.getWritableDatabase();
+        ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
+        ndb.close();
+
         journaldb = new journalSQLiteHelper(this, title);
         SQLiteDatabase jdb = journaldb.getWritableDatabase();
-        db.delete(DB.getTableName(),"_title = '"+title + "';",null);
-        ndb.delete(notedb.getTableName(),"_title = '"+title + "';",null);
         jdb.execSQL("DROP TABLE IF EXISTS " + journaldb.get_TableName());
-        db.close();
-        ndb.close();
         jdb.close();
+
+
+
         //刪除時要改資料庫
     }
 
@@ -308,7 +339,10 @@ public class EditPage extends AppCompatActivity{
     @Override
     public void onDestroy(){
         super.onDestroy();
+        Id = 0;
         DB.close();
+        editDB.close();
+        notedb.close();
     }
 
 }

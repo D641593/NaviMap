@@ -114,9 +114,7 @@ public class notePage extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void setItem(){
-
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("旅遊規劃 - " + title);
         SQLiteDatabase db = DB.getReadableDatabase();
         String SQLinst = "select * from " + DB.getTableName() + " where _title = '" + title + "';";
         Cursor c = db.rawQuery(SQLinst,null);
@@ -176,23 +174,19 @@ public class notePage extends AppCompatActivity {
                 int ID = item.getItemId();
                 if( ID == R.id.NotePageItem){
                     // Do nothing
-                    System.out.println("NotePage");
                 }else if( ID == R.id.GoogleMapItem ){
-                    System.out.println("GoogleMap");
                     Intent intent = new Intent(notePage.this,MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Name",title);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else if( ID == R.id.JournalPageItem){
-                    System.out.println("Journal");
                     Intent intent = new Intent(notePage.this,journal.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Name",title);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
-                System.out.println("Selected btm");
                 return true;
             }
         });
@@ -215,7 +209,7 @@ public class notePage extends AppCompatActivity {
     public void onRestart() {
         super.onRestart();
         System.out.println("Restart");
-        btmView.getMenu().getItem(0).setChecked(true);
+        btmView.setSelectedItemId(R.id.NotePageItem);
     }
 
 
@@ -289,9 +283,6 @@ public class notePage extends AppCompatActivity {
                     calendar.dismiss();
                 }
             });
-        }else if( ID == android.R.id.home){
-            finish();
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -423,7 +414,6 @@ public class notePage extends AppCompatActivity {
 //        Intent intent = new Intent(Intent.ACTION_PICK, getExter)
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -436,6 +426,11 @@ public class notePage extends AppCompatActivity {
                 addImage(uri,true);
             }
         }
+    }
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(notePage.this,EditPage.class);
+        startActivity(intent);
     }
 
 }
