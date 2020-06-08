@@ -423,6 +423,7 @@ public class journal extends AppCompatActivity {
 //        Uri為 file類型
             filePath = uri.getPath();
         }
+
         return filePath;
     }
 
