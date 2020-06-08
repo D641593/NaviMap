@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -400,20 +401,29 @@ public class journal extends AppCompatActivity {
     private String getPath(Context context, Uri uri) {
         String filePath = "";
 
+        if(DocumentsContract.isDocumentUri(context, uri)) {
 //        Uri為 Document類型
-//        DocumentsContract.isDocumentUri(context, uri)
-        String wholeID = DocumentsContract.getDocumentId(uri);
-        String id = wholeID.split(":")[1];
-        String[] column = { MediaStore.Images.Media.DATA };
-        String selection = MediaStore.Images.Media._ID + "=?";
+            String wholeID = DocumentsContract.getDocumentId(uri);
+            String id = wholeID.split(":")[1];
+            String[] column = {MediaStore.Images.Media.DATA};
+            String selection = MediaStore.Images.Media._ID + "=?";
 
-//        SELECT column FROM MediaStore.Images.Media.EXTERNAL_CONTENT_URI WHERE selection
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, selection, new String[]{id}, null);
+        //        SELECT column FROM MediaStore.Images.Media.EXTERNAL_CONTENT_URI WHERE selection
+            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, selection, new String[]{id}, null);
 
-        if(cursor.moveToFirst()) {
-            filePath = cursor.getString(cursor.getColumnIndex(column[0]));
+            if (cursor == null) {
+                filePath = uri.getPath();
+            } else {
+                if (cursor.moveToFirst()) {
+                    filePath = cursor.getString(cursor.getColumnIndex(column[0]));
+                }
+            }
+            cursor.close();
+        }else if(ContentResolver.SCHEME_FILE.equals(uri.getScheme())){
+//        Uri為 file類型
+            filePath = uri.getPath();
         }
-        cursor.close();
+
 
         return filePath;
     }
