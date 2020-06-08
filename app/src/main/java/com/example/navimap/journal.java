@@ -294,6 +294,7 @@ public class journal extends AppCompatActivity {
                     }
                     if(imageName != null){
                         tmp.setImageName(imageName);
+                        System.out.println(imageName);
                         journal_image.setImageResource(R.mipmap.ic_launcher);
                     }
 
@@ -390,7 +391,9 @@ public class journal extends AppCompatActivity {
                 journal_image.setImageBitmap(bitmap);
             }else if(requestCode == REQUEST_GALLERY){
                 Uri uri = data.getData();
-                imageName = getPath(this, uri);
+                imageName = getRealFilePath(this, uri);
+                System.out.println("URI"+imageName);
+//                System.out.println(uri.);
                 journal_image.setImageURI(uri);
             }
         }
@@ -400,7 +403,7 @@ public class journal extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private String getPath(Context context, Uri uri) {
         String filePath = "";
-
+        System.out.println("GeyPath" + uri);
         if(DocumentsContract.isDocumentUri(context, uri)) {
 //        Uri為 Document類型
             String wholeID = DocumentsContract.getDocumentId(uri);
@@ -423,8 +426,32 @@ public class journal extends AppCompatActivity {
 //        Uri為 file類型
             filePath = uri.getPath();
         }
-
+        System.out.println("GetPath: "+ filePath);
         return filePath;
+    }
+
+    public static String getRealFilePath( final Context context, final Uri uri ) {
+        if ( null == uri ) return null;
+        final String scheme = uri.getScheme();
+        String data = null;
+        if ( scheme == null )
+            data = uri.getPath();
+        else if ( ContentResolver.SCHEME_FILE.equals( scheme ) ) {
+            data = uri.getPath();
+        } else if ( ContentResolver.SCHEME_CONTENT.equals( scheme ) ) {
+            Cursor cursor = context.getContentResolver().query( uri, new String[] { MediaStore.Images.ImageColumns.DATA }, null, null, null );
+            if ( null != cursor ) {
+                if ( cursor.moveToFirst() ) {
+                    int index = cursor.getColumnIndex( MediaStore.Images.ImageColumns.DATA );
+                    if ( index > -1 ) {
+                        data = cursor.getString( index );
+                    }
+                }
+                cursor.close();
+            }
+        }
+        System.out.println("GetPath: "+ data);
+        return data.substring(data.lastIndexOf("/") + 1, data.length());
     }
 
     private void openGallery() {
@@ -449,12 +476,19 @@ public class journal extends AppCompatActivity {
                 return;
             }
         }
-
-        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
-        File sd = new File(filePath);
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
-        intent.setType("image/*");
-        startActivity(Intent.createChooser(intent, "Select File"));
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() +"/AppCameraPhoto/" + markerName+"/");
+        System.out.println("USAFAS");
+        System.out.println(uri.getPath());
+        intent.setDataAndType(uri,"*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivity(intent);
+//        startActivity(Intent.createChooser(intent,"Select File"));
+        //        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+//        File sd = new File(filePath);
+//        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
+//        intent.setType("image/*");
+//        startActivity(Intent.createChooser(intent, "Select File"));
     }
 
 
