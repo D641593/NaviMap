@@ -450,12 +450,19 @@ public class journal extends AppCompatActivity {
                 return;
             }
         }
-
-        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
-        File sd = new File(filePath);
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
-        intent.setType("image/*");
-        startActivity(Intent.createChooser(intent, "Select File"));
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() +"/AppCameraPhoto/" + markerName+"/");
+        System.out.println("USAFAS");
+        System.out.println(uri.getPath());
+        intent.setDataAndType(uri,"*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivity(intent);
+//        startActivity(Intent.createChooser(intent,"Select File"));
+        //        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+//        File sd = new File(filePath);
+//        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
+//        intent.setType("image/*");
+//        startActivity(Intent.createChooser(intent, "Select File"));
     }
 
 //
