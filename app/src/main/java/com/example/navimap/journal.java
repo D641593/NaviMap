@@ -423,8 +423,6 @@ public class journal extends AppCompatActivity {
 //        Uri為 file類型
             filePath = uri.getPath();
         }
-
-
         return filePath;
     }
 
@@ -458,17 +456,5 @@ public class journal extends AppCompatActivity {
         startActivity(Intent.createChooser(intent, "Select File"));
     }
 
-//
-//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK) {
-//            if (requestCode == REQUEST_GALLERY) {
-//                Uri uri = data.getData();
-//                addImage(uri,true);
-//            }
-//        }
-//    }
 
 }
