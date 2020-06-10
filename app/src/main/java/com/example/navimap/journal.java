@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.navimap.ui.journal_album.journal_album;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -46,6 +47,7 @@ public class journal extends AppCompatActivity {
 
     private static final int REQUEST_GALLERY = 0x1001;
     private static final int REQUEST_GALLERY_SHOWONLY = 0x1010;
+    private static final int MY_CUSTOM_GALLERY = 020;
 
     // add_dialog.xml
     private Dialog dialog;
@@ -201,7 +203,12 @@ public class journal extends AppCompatActivity {
             diashow();
 //        開啟相簿
         } else if(item.getItemId() == R.id.journal_menu_album_button){
-            openGalleryShowOnly();
+            Intent intent = new Intent(journal.this, journal_album.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("Name",markerName);
+            bundle.putString("isShowOnly", "yes");
+            intent.putExtras(bundle);
+            startActivity(intent);
 //        拍照
         }else if(item.getItemId() == R.id.journal_menu_takepicture_button){
             if(!photo.hasPermission(getApplicationContext())){
@@ -346,18 +353,19 @@ public class journal extends AppCompatActivity {
 
             }
         });
+
+//        對話視窗..>點選圖片後
         journal_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                if(!photo.hasPermission(getApplicationContext())){
-//                    if(photo.needCheckPermission(journal.this)){
-//                        return;
-//                    }
-//                }
-//                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(intent,0);
-                openGallery();
+//                openGallery();
+
+                Intent intent = new Intent(journal.this, journal_album.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Name",markerName);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, MY_CUSTOM_GALLERY);
             }
         });
 
@@ -389,12 +397,16 @@ public class journal extends AppCompatActivity {
                 imageName = photo.save(bitmap,markerName);
                 journal_image.setBackground(null);
                 journal_image.setImageBitmap(bitmap);
-            }else if(requestCode == REQUEST_GALLERY){
+            }else if(requestCode == REQUEST_GALLERY) {
                 Uri uri = data.getData();
                 imageName = getRealFilePath(this, uri);
                 System.out.println("URI"+imageName);
 //                System.out.println(uri.);
                 journal_image.setImageURI(uri);
+            }else if(requestCode == MY_CUSTOM_GALLERY) {
+                PhotoSave p = new PhotoSave();
+                Bitmap bitmap = p.getPhoto(data.getStringExtra("getJournal_album_photoName"), data.getStringExtra("album_result_markerName"));
+                journal_image.setImageBitmap(bitmap);
             }
         }
     }
@@ -476,19 +488,19 @@ public class journal extends AppCompatActivity {
                 return;
             }
         }
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() +"/AppCameraPhoto/" + markerName+"/");
-        System.out.println("USAFAS");
-        System.out.println(uri.getPath());
-        intent.setDataAndType(uri,"*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivity(intent);
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() +"/AppCameraPhoto/" + markerName+"/");
+//        System.out.println("USAFAS");
+//        System.out.println(uri.getPath());
+//        intent.setDataAndType(uri,"*/*");
+//        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//        startActivity(intent);
 //        startActivity(Intent.createChooser(intent,"Select File"));
-        //        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
-//        File sd = new File(filePath);
-//        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
-//        intent.setType("image/*");
-//        startActivity(Intent.createChooser(intent, "Select File"));
+        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
+        File sd = new File(filePath);
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
+        intent.setType("image/*");
+        startActivity(Intent.createChooser(intent, "Select File"));
     }
 
 
