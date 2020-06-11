@@ -208,7 +208,7 @@ public class journal extends AppCompatActivity {
             bundle.putString("Name",markerName);
             bundle.putString("isShowOnly", "yes");
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent,1);
 //        拍照
         }else if(item.getItemId() == R.id.journal_menu_takepicture_button){
             if(!photo.hasPermission(getApplicationContext())){
@@ -364,6 +364,7 @@ public class journal extends AppCompatActivity {
                 Intent intent = new Intent(journal.this, journal_album.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Name",markerName);
+                bundle.putString("isShowOnly","No");
                 intent.putExtras(bundle);
                 startActivityForResult(intent, MY_CUSTOM_GALLERY);
             }
@@ -405,8 +406,18 @@ public class journal extends AppCompatActivity {
                 journal_image.setImageURI(uri);
             }else if(requestCode == MY_CUSTOM_GALLERY) {
                 PhotoSave p = new PhotoSave();
+                if(data.getStringExtra("IsEmpty").equals("yes")){
+                    Toast.makeText(getApplicationContext(), "當前遊記沒有照片",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Bitmap bitmap = p.getPhoto(data.getStringExtra("getJournal_album_photoName"), data.getStringExtra("album_result_markerName"));
+                imageName = data.getStringExtra("getJournal_album_photoName");
                 journal_image.setImageBitmap(bitmap);
+            }else if(requestCode == 1){
+                if(data.getStringExtra("IsEmpty").equals("yes")){
+                    Toast.makeText(getApplicationContext(), "當前遊記沒有照片",Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         }
     }
@@ -465,43 +476,5 @@ public class journal extends AppCompatActivity {
         System.out.println("GetPath: "+ data);
         return data.substring(data.lastIndexOf("/") + 1, data.length());
     }
-
-    private void openGallery() {
-        PhotoSave photoSave = new PhotoSave();
-        if(!photoSave.hasPermission(getApplicationContext())) {
-            if (photoSave.needCheckPermission(journal.this)){
-                return;
-            }
-        }
-
-        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
-        File sd = new File(filePath);
-        Intent intent=new Intent(Intent.ACTION_PICK, Uri.fromFile(sd));
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
-    }
-
-    private void openGalleryShowOnly(){
-        PhotoSave photoSave = new PhotoSave();
-        if(!photoSave.hasPermission(getApplicationContext())) {
-            if (photoSave.needCheckPermission(journal.this)){
-                return;
-            }
-        }
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() +"/AppCameraPhoto/" + markerName+"/");
-//        System.out.println("USAFAS");
-//        System.out.println(uri.getPath());
-//        intent.setDataAndType(uri,"*/*");
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        startActivity(intent);
-//        startActivity(Intent.createChooser(intent,"Select File"));
-        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto";
-        File sd = new File(filePath);
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.fromFile(sd));
-        intent.setType("image/*");
-        startActivity(Intent.createChooser(intent, "Select File"));
-    }
-
 
 }

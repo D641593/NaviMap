@@ -28,6 +28,7 @@ public class journal_album_adapter extends RecyclerView.Adapter<journal_album_ad
 //    }
     public journal_album_adapter(File[] imagesPath){
         this.imagesPath = imagesPath;
+        System.out.println("Im here" + imagesPath[0]);
     }
 //    constructor(RecyclerView.Adapter) 根據內部 class 的 constructor(ImageViewHolder) 來創建
     @Override
@@ -49,7 +50,8 @@ public class journal_album_adapter extends RecyclerView.Adapter<journal_album_ad
 
         if(imagesPath[position].getPath()!=null){
             holder.journal_album_imageView.setBackground(null);
-            Bitmap bitmap = p.getPhoto(imagesPath[position].getPath(), journal.markerName);
+            Bitmap bitmap = p.getPhoto(imagesPath[position].getPath().substring(imagesPath[position].getPath().lastIndexOf("/") + 1, imagesPath[position].getPath().length()), journal.markerName);
+            System.out.println("Bit :" + imagesPath[position].getPath().substring(imagesPath[position].getPath().lastIndexOf("/") + 1, imagesPath[position].getPath().length()));
             if(bitmap != null){
                 holder.journal_album_imageView.setImageBitmap(bitmap);
             } else {
