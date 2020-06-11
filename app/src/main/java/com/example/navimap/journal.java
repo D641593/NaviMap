@@ -87,7 +87,6 @@ public class journal extends AppCompatActivity {
         setContentView(R.layout.journal_main);
         intent = getIntent();
         markerName = intent.getStringExtra("Name");
-//        Toast.makeText(getApplicationContext(),markerName,Toast.LENGTH_SHORT).show();
 
         journal_list = findViewById(R.id.journalList);
         initList();
@@ -95,26 +94,6 @@ public class journal extends AppCompatActivity {
         getSupportActionBar().setTitle(markerName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        back_btn = findViewById(R.id.BacKToMap);
-//        back_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                intent.setClass(journal.this, MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
-//        create_start = findViewById(R.id.create_start);
-//        create_start.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                is_item_change = false;
-//                imageName = null;
-//                journal_item_position = 0;
-//                initDia();
-//                diashow();
-//            }
-//        });
         journal_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -475,6 +454,18 @@ public class journal extends AppCompatActivity {
         }
         System.out.println("GetPath: "+ data);
         return data.substring(data.lastIndexOf("/") + 1, data.length());
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(journal.this,EditPage.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        btmView.setSelectedItemId(R.id.JournalPageItem);
     }
 
 }
