@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.journal;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import org.w3c.dom.Text;
+import com.example.navimap.R;
 
 import java.util.List;
 

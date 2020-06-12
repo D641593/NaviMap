@@ -1,9 +1,8 @@
-package com.example.navimap;
+package com.example.navimap.journal;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,36 +16,33 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.navimap.ui.journal_album.journal_album;
+import com.example.navimap.R;
+import com.example.navimap.journal.database.journalDBManager;
+import com.example.navimap.main.EditPage;
+import com.example.navimap.journal.journal_album.journal_album;
+import com.example.navimap.map.MainActivity;
+import com.example.navimap.note.notePage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class journal extends AppCompatActivity {
 
     private static final int REQUEST_GALLERY = 0x1001;
-    private static final int REQUEST_GALLERY_SHOWONLY = 0x1010;
     private static final int MY_CUSTOM_GALLERY = 020;
 
     // add_dialog.xml
@@ -57,7 +53,6 @@ public class journal extends AppCompatActivity {
     private ImageView journal_image;
 
     //main.xml
-//    private Button create_start, back_btn;
     private ListView journal_list;
 
     //暫存值
@@ -68,7 +63,6 @@ public class journal extends AppCompatActivity {
     private Intent intent = new Intent();
 
     //主要值
-    private static List<String> content_list = new ArrayList<>();
     private static List<Journal_list_item> main_list = new ArrayList<>();
 
     //用到的java
@@ -100,7 +94,6 @@ public class journal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Journal_list_item item = main_list.get(position);
                 changeDialog(item.getImageName(), item.getTitle(), item.getContent());
-//                imageName = item.getImageName();
                 journal_item_position = position;
                 is_item_change = true;
                 diashow();
@@ -114,14 +107,11 @@ public class journal extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-//                        content_list.remove(position);
-
                         main_list.get(0).setId();
                         main_list.remove(position);
                         resetIndex(position);
 
                         dbManager.delete(position+1);
-                        dbManager.show();
                         journal_list.setAdapter(journal_adapter);
                         dialog.dismiss();
 
@@ -144,13 +134,13 @@ public class journal extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int ID = item.getItemId();
                 if( ID == R.id.NotePageItem){
-                    Intent intent = new Intent(journal.this,notePage.class);
+                    Intent intent = new Intent(journal.this, notePage.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Title",markerName);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else if( ID == R.id.GoogleMapItem ){
-                    Intent intent = new Intent(journal.this,MainActivity.class);
+                    Intent intent = new Intent(journal.this, MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Name",markerName);
                     intent.putExtras(bundle);
@@ -210,9 +200,7 @@ public class journal extends AppCompatActivity {
         try{
             main_list.get(0).resetID();
             main_list.clear();
-//            content_list.clear();
             dbManager.close();
-            System.out.println("I am DESTROY!!!!!!!!!!!!!");
             return;
         } catch (Exception e){
             return;
@@ -254,7 +242,6 @@ public class journal extends AppCompatActivity {
         for(int i=position ;i<main_list.size();i++){
             main_list.get(i).setItem_index();
         }
-//        main_list.get(0).setId();
     }
 
     public void diashow(){
@@ -280,17 +267,13 @@ public class journal extends AppCompatActivity {
                     }
                     if(imageName != null){
                         tmp.setImageName(imageName);
-                        System.out.println(imageName);
                         journal_image.setImageResource(R.mipmap.ic_launcher);
                     }
 
-
-                    System.out.println("create" + journal_content.getText().toString().trim());
                     dbManager.create(tmp.getItem_index(),
                             tmp.getImageName(),
                             tmp.getTitle(),
                             tmp.getContent());
-                    dbManager.show();
                     main_list.add(tmp);
                 }
                 else {
@@ -316,8 +299,6 @@ public class journal extends AppCompatActivity {
                                     main_list.get(journal_item_position).getImageName(),
                                     journal_title.getText().toString().trim(),
                                     journal_content.getText().toString().trim());
-                    System.out.println("Change");
-                    dbManager.show();
                 }
                 dialog.dismiss();
                 journal_list.setAdapter(journal_adapter);
@@ -338,8 +319,6 @@ public class journal extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                openGallery();
-
                 Intent intent = new Intent(journal.this, journal_album.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Name",markerName);
@@ -357,12 +336,8 @@ public class journal extends AppCompatActivity {
         dbManager = new journalDBManager(journal.this, markerName);
         List<Journal_list_item> list = dbManager.initList();
         main_list = new ArrayList<>(list);
-//        content_list = new ArrayList<String>(list.content);
         journal_adapter = new JournalAdapter(this, R.layout.journal_item, main_list);
         journal_list.setAdapter(journal_adapter);
-        System.out.println("InitList");
-
-        dbManager.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -380,8 +355,6 @@ public class journal extends AppCompatActivity {
             }else if(requestCode == REQUEST_GALLERY) {
                 Uri uri = data.getData();
                 imageName = getRealFilePath(this, uri);
-                System.out.println("URI"+imageName);
-//                System.out.println(uri.);
                 journal_image.setImageURI(uri);
             }else if(requestCode == MY_CUSTOM_GALLERY) {
                 PhotoSave p = new PhotoSave();
@@ -399,37 +372,6 @@ public class journal extends AppCompatActivity {
                 }
             }
         }
-    }
-
-//  透過 Uri 尋找該圖片的path
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private String getPath(Context context, Uri uri) {
-        String filePath = "";
-        System.out.println("GeyPath" + uri);
-        if(DocumentsContract.isDocumentUri(context, uri)) {
-//        Uri為 Document類型
-            String wholeID = DocumentsContract.getDocumentId(uri);
-            String id = wholeID.split(":")[1];
-            String[] column = {MediaStore.Images.Media.DATA};
-            String selection = MediaStore.Images.Media._ID + "=?";
-
-        //        SELECT column FROM MediaStore.Images.Media.EXTERNAL_CONTENT_URI WHERE selection
-            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, selection, new String[]{id}, null);
-
-            if (cursor == null) {
-                filePath = uri.getPath();
-            } else {
-                if (cursor.moveToFirst()) {
-                    filePath = cursor.getString(cursor.getColumnIndex(column[0]));
-                }
-            }
-            cursor.close();
-        }else if(ContentResolver.SCHEME_FILE.equals(uri.getScheme())){
-//        Uri為 file類型
-            filePath = uri.getPath();
-        }
-        System.out.println("GetPath: "+ filePath);
-        return filePath;
     }
 
     public static String getRealFilePath( final Context context, final Uri uri ) {
@@ -452,14 +394,15 @@ public class journal extends AppCompatActivity {
                 cursor.close();
             }
         }
-        System.out.println("GetPath: "+ data);
         return data.substring(data.lastIndexOf("/") + 1, data.length());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(journal.this,EditPage.class);
+        Intent intent = new Intent(journal.this, EditPage.class);
         startActivity(intent);
+
     }
 
     @Override

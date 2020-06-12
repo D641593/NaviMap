@@ -1,10 +1,9 @@
-package com.example.navimap.ui.journal_album;
+package com.example.navimap.journal.journal_album;
 
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 
 import androidx.recyclerview.widget.RecyclerView;
 

@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.note;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,7 +22,6 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +29,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.navimap.journal.PhotoSave;
+import com.example.navimap.R;
+import com.example.navimap.main.EditPage;
+import com.example.navimap.journal.journal;
+import com.example.navimap.map.MainActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +42,6 @@ import java.util.Calendar;
 
 public class notePage extends AppCompatActivity {
 
-    private static final int REQUEST_READ_EXTERNAL_STORAGE = 0x1000;
     private static final int REQUEST_GALLERY = 0x1001;
     private noteDB DB;
     private Button saveBtn;
@@ -175,13 +178,13 @@ public class notePage extends AppCompatActivity {
                 if( ID == R.id.NotePageItem){
                     // Do nothing
                 }else if( ID == R.id.GoogleMapItem ){
-                    Intent intent = new Intent(notePage.this,MainActivity.class);
+                    Intent intent = new Intent(notePage.this, MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Name",title);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else if( ID == R.id.JournalPageItem){
-                    Intent intent = new Intent(notePage.this,journal.class);
+                    Intent intent = new Intent(notePage.this, journal.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Name",title);
                     intent.putExtras(bundle);
@@ -411,7 +414,6 @@ public class notePage extends AppCompatActivity {
         }
 
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        Intent intent = new Intent(Intent.ACTION_PICK, getExter)
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
@@ -429,7 +431,7 @@ public class notePage extends AppCompatActivity {
     }
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(notePage.this,EditPage.class);
+        Intent intent = new Intent(notePage.this, EditPage.class);
         startActivity(intent);
     }
 

@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.journal;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,7 @@ public class PhotoSave extends FragmentActivity {
     private final String PERMISSION_WRITE_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
 
 //  SD權限
-    boolean needCheckPermission(Activity activity) {
+    public boolean needCheckPermission(Activity activity) {
         //MarshMallow(API-23)之後要在 Runtime 詢問權限
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] perms = {PERMISSION_WRITE_STORAGE};
@@ -39,7 +39,7 @@ public class PhotoSave extends FragmentActivity {
         return false;
     }
 
-    boolean hasPermission(Context context){
+    public boolean hasPermission(Context context){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             return(ActivityCompat.checkSelfPermission(context, PERMISSION_WRITE_STORAGE) == PackageManager.PERMISSION_GRANTED);
         }

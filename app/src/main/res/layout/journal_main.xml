@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".journal"
+    tools:context=".journal.journal"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@id/navigationBottomView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        tools:context=".journal"
+        tools:context=".journal.journal"
         tools:layout_editor_absoluteX="0dp">
 
         <ListView

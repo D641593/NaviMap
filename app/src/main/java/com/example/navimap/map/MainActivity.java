@@ -1,24 +1,19 @@
-package com.example.navimap;
+package com.example.navimap.map;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -26,21 +21,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.navimap.R;
+import com.example.navimap.journal.database.journalSQLiteHelper;
+import com.example.navimap.note.noteDB;
+import com.example.navimap.main.EditPage;
+import com.example.navimap.journal.journal;
+import com.example.navimap.note.notePage;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -52,7 +49,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -60,11 +56,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.SQLData;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -73,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private Dialog dialog;
     private EditText title;
-    private Button add,cancel,time_add;
+    private Button add,cancel;
     private AlertDialog.Builder alertDialog;
 
 //    GPS定位
@@ -95,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String dbTitle = "";
     private double lati,longi;
     private int dbID;
-    private ImageButton btn_edit;
     private ImageButton btn_search;
     private int id;
     private SearchView searchView;
@@ -118,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int ID = item.getItemId();
                 if( ID == R.id.NotePageItem){
-                    Intent intent = new Intent(MainActivity.this,notePage.class);
+                    Intent intent = new Intent(MainActivity.this, notePage.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Title",journalName);
                     intent.putExtras(bundle);
@@ -126,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }else if( ID == R.id.GoogleMapItem ){
                     // Do nothing
                 }else if( ID == R.id.JournalPageItem){
-                    Intent intent = new Intent(MainActivity.this,journal.class);
+                    Intent intent = new Intent(MainActivity.this, journal.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Name",journalName);
                     intent.putExtras(bundle);
@@ -644,8 +636,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(MainActivity.this,EditPage.class);
+        Intent intent = new Intent(MainActivity.this, EditPage.class);
         startActivity(intent);
+
     }
 
     @Override

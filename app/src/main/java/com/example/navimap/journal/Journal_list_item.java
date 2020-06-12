@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.journal;
 
 public class Journal_list_item {
     private static int id = 0;
@@ -60,10 +60,6 @@ public class Journal_list_item {
         this.title = title;
     }
     public void setContent(String content) {this.content = content; }
-//    public void setAll(String imageName, String title){
-//        this.imageName = imageName;
-//        this.title = title;
-//    }
 
 
 }

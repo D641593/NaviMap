@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.note;
 
 import android.content.Intent;
 

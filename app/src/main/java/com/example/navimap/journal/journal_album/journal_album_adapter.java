@@ -1,4 +1,4 @@
-package com.example.navimap.ui.journal_album;
+package com.example.navimap.journal.journal_album;
 
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -10,22 +10,17 @@ import android.widget.ImageView;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.navimap.PhotoSave;
+import com.example.navimap.journal.PhotoSave;
 import com.example.navimap.R;
-import com.example.navimap.journal;
+import com.example.navimap.journal.journal;
 
 import java.io.File;
-import java.util.ArrayList;
 
 
 public class journal_album_adapter extends RecyclerView.Adapter<journal_album_adapter.ImageViewHolder> {
 
-//    private int[] images;
     private File[] imagesPath = null;
 
-//    public journal_album_adapter(int[] images){
-//        this.images = images;
-//    }
     public journal_album_adapter(File[] imagesPath){
         this.imagesPath = imagesPath;
         System.out.println("Im here" + imagesPath[0]);
@@ -43,8 +38,6 @@ public class journal_album_adapter extends RecyclerView.Adapter<journal_album_ad
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-//        int images_id = images[position];
-//        holder.journal_album_imageView.setImageResource(images_id);
 
         PhotoSave p = new PhotoSave();
 
@@ -60,20 +53,6 @@ public class journal_album_adapter extends RecyclerView.Adapter<journal_album_ad
         } else{
             holder.journal_album_imageView.setImageResource(R.mipmap.ic_launcher);
         }
-
-//        if (item.getImageName() != null) {
-//            imageView.setBackground(null);
-//            Bitmap bitmap = p.getPhoto(item.getImageName(), journal.markerName);
-//            if(bitmap != null){
-//                imageView.setImageBitmap(bitmap);
-//            } else {
-//                imageView.setImageResource(R.mipmap.ic_launcher);
-//            }
-//
-//        }
-//        else {
-//            imageView.setImageResource(R.mipmap.ic_launcher);
-//        }
 
     }
 

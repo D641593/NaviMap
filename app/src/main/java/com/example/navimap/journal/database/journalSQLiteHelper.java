@@ -1,10 +1,10 @@
-package com.example.navimap;
+package com.example.navimap.journal.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-class journalSQLiteHelper extends SQLiteOpenHelper {
+public class journalSQLiteHelper extends SQLiteOpenHelper {
 
     private final static int _DBVersion = 1; //版本
     private final static String _DBName = "JournalList.db";// 資料庫 name
@@ -18,10 +18,6 @@ class journalSQLiteHelper extends SQLiteOpenHelper {
     public journalSQLiteHelper(Context context, String tableName) {
         super(context, _DBName, null, _DBVersion); //給 SQLiteOpenHelper construct
         _TableName = "J_" + tableName;
-//        _ID = tableName+"_id";
-//        IMAGENAME = tableName+"_IMAGENAME";
-//        TITLE = tableName+"_TITLE";
-//        CONTENT = tableName+"_CONTENT";
 
         // TODO Auto-generated constructor stub
     }

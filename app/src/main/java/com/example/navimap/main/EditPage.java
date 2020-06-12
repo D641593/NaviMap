@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.main;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +30,13 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.example.navimap.R;
+import com.example.navimap.journal.database.journalSQLiteHelper;
+import com.example.navimap.note.noteDB;
+import com.example.navimap.map.tinyDB;
+import com.example.navimap.map.MainActivity;
+import com.example.navimap.journal.journal;
+import com.example.navimap.note.notePage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -336,6 +343,13 @@ public class EditPage extends AppCompatActivity{
         public boolean getSwipEnableByPosition(int position) {
             return true;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity(); //結束所有finish
     }
 
     @Override

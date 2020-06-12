@@ -1,4 +1,4 @@
-package com.example.navimap;
+package com.example.navimap.main;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -49,18 +49,4 @@ public class EditDB extends SQLiteOpenHelper {
         db.execSQL(sql);
         db.close();
     }
-    public void dbshow(SQLiteDatabase db){
-        String[] columns = {"_id","_title"};
-        Cursor cursor = db.query(TableName, columns, null, null, null, null, null);
-        System.out.println("Data base show");
-        System.out.println(TableName);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            System.out.println("ID : " + cursor.getInt(0));
-            System.out.println("title : " + cursor.getString(1));
-            cursor.moveToNext();
-        }
-        cursor.close();
-    }
-
 }

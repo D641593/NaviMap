@@ -1,28 +1,21 @@
-package com.example.navimap;
+package com.example.navimap.journal.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
+
+import com.example.navimap.journal.Journal_list_item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class journalDBManager {
+public class journalDBManager {
     private Context context;
     private SQLiteDatabase database;
     private journalSQLiteHelper dbHelper;
     private String tableName;
     private List<Journal_list_item> t = new ArrayList<>();
-//    private list t = new list();
-//    class list{
-//        List<Journal_list_item> journal_list = new ArrayList<>();
-//        List<String> content = new ArrayList<>();
-//    }
-
 
     public journalDBManager(Context c, String markerName){
         this.context = c;
@@ -38,8 +31,6 @@ class journalDBManager {
             Cursor cursor = database.query(this.tableName, columns,null,null,null,null,null);
             while (cursor.moveToNext()){
                 Journal_list_item tmp = new Journal_list_item(cursor.getInt(cursor.getColumnIndex(dbHelper.get_id())), cursor.getString(cursor.getColumnIndex(dbHelper.getIMAGENAME())), cursor.getString(cursor.getColumnIndex(dbHelper.getTITLE())), cursor.getString(cursor.getColumnIndex(dbHelper.getCONTENT())));
-//                t.content.add(cursor.getString(3));
-//                t.journal_list.add(tmp);
                 t.add(tmp);
             }
 

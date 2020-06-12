@@ -1,8 +1,9 @@
-package com.example.navimap;
+package com.example.navimap.ui.bottom_bar;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.navimap.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
