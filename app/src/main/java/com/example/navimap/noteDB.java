@@ -32,11 +32,13 @@ class noteDB extends SQLiteOpenHelper {
                 "_content varchar(3000), " +
                 "_image integer" + ");";
         db.execSQL(SQL);
+        db.close();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         final String SQL = "drop table " + TableName;
         db.execSQL(SQL);
+        db.close();
     }
 }

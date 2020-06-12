@@ -39,7 +39,6 @@ public class EditDB extends SQLiteOpenHelper {
     public void insert(String title, SQLiteDatabase db, int index){
         String sql = "insert into " + TableName + " (" + "_id," +  "_title" + ") values (" + index + ", "+"'"+ title + "'"+")";
         db.execSQL(sql);
-        db.close();
     }
     public void onDelete(SQLiteDatabase db, String title,int id){
         db.delete(TableName,"_title = '" + title  +"';",null);
@@ -55,12 +54,13 @@ public class EditDB extends SQLiteOpenHelper {
         Cursor cursor = db.query(TableName, columns, null, null, null, null, null);
         System.out.println("Data base show");
         System.out.println(TableName);
-        while (cursor.moveToNext()) {
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
             System.out.println("ID : " + cursor.getInt(0));
             System.out.println("title : " + cursor.getString(1));
+            cursor.moveToNext();
         }
         cursor.close();
-        db.close();
     }
 
 }

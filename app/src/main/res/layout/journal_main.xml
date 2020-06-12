@@ -25,11 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/create_start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_journal" />
+<!--        <Button-->
+<!--            android:id="@+id/create_start"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/create_journal" />-->
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

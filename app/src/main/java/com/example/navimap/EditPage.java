@@ -1,6 +1,5 @@
 package com.example.navimap;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +8,6 @@ import android.content.Intent;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
@@ -17,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -65,12 +62,11 @@ public class EditPage extends AppCompatActivity{
 
         getSupportActionBar().setTitle("旅遊企劃");
         travel = findViewById(R.id.create_travel);
-        mListView = (SwipeMenuListView) findViewById(R.id.listView);
 
+        mListView = (SwipeMenuListView) findViewById(R.id.listView);
         initDialog();
         mAdapter = new AppAdapter();
         mListView.setAdapter(mAdapter);
-        editDB.dbshow(editDB.getReadableDatabase());
         travel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +179,6 @@ public class EditPage extends AppCompatActivity{
                             System.out.println("Error: " + e.getMessage());
                         }
                         editDB.onDelete(editDB.getWritableDatabase(), item, position);
-                        editDB.dbshow(editDB.getReadableDatabase());
                         markerList.remove(position);
                         Id = markerList.size();
                         //通知监听者数据集发生改变，更新ListView界面
@@ -209,12 +204,11 @@ public class EditPage extends AppCompatActivity{
     }
 
     private boolean storeDB(String title){
-       SQLiteDatabase db = editDB.getReadableDatabase();
+       SQLiteDatabase db = editDB.getWritableDatabase();
        Cursor c = db.rawQuery("select * from " + editDB.getTableName() + " where _title = '" + title + "';",null);
        if(!c.moveToFirst()){
-           editDB.insert(title, editDB.getWritableDatabase(), Id);
+           editDB.insert(title, db, Id);
            Id++;
-           editDB.dbshow(editDB.getReadableDatabase());
            c.close();
            db.close();
            return true;
@@ -230,18 +224,26 @@ public class EditPage extends AppCompatActivity{
 
     private void CatchDB(){
         SQLiteDatabase db = editDB.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + editDB.getTableName() + ";",null);
-        c.moveToFirst();
-        markerList.clear();
-        while(!c.isAfterLast()){
-            markerList.add(c.getString(1));
-            c.moveToNext();
-            Id++;
+        try {
+            Cursor c = db.rawQuery("select * from " + editDB.getTableName() + ";", null);
+            c.moveToFirst();
+            System.out.println("catch");
+            markerList.clear();
+            while (!c.isAfterLast()) {
+                System.out.println(c.getString(1));
+                markerList.add(c.getString(1));
+                c.moveToNext();
+                Id++;
+            }
+            c.close();
+            db.close();
         }
-        System.out.println(Id);
-        editDB.dbshow(db);
-        c.close();
-        db.close();
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            editDB.onCreate(db);
+            db.close();
+            System.out.println("Create");
+        }
     }
 
     private void deleteDB(String title){
