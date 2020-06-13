@@ -271,7 +271,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void shortDistance(){
         SQLiteDatabase db = DB.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + DB.getTableName() + ";",null);
+        Cursor c = db.rawQuery("select * from " + DB.getTableName() + " where _title = '" + journalName +"';",null);
+        if(c == null){
+            Toast.makeText(getApplicationContext(),"沒有任何標記點",Toast.LENGTH_SHORT).show();
+            c.close();
+            db.close();
+            return;
+        }
         c.moveToFirst();
         float min = 0;
         String name = null;
@@ -283,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             float[] result = new float[1];
             Location.distanceBetween(nowLocation.latitude, nowLocation.longitude, lati, longi, result);
             if(min > result[0] || min == 0){
-                name = c.getString(1);
+                name = c.getString(2);
                 min = result[0];
             }
             c.moveToNext();
