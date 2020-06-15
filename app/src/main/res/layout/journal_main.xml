@@ -9,28 +9,28 @@
     tools:context=".journal.journal"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/navigationBottomView"
-        app:layout_constraintTop_toTopOf="@menu/journal_navimenu"
-        app:layout_constraintVertical_bias="1.0"
-        tools:context=".journal.journal"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/navigationBottomView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="?attr/actionBarSize">
 
-        <ListView
-            android:id="@+id/journalList"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-<!--        <Button-->
-<!--            android:id="@+id/create_start"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/create_journal" />-->
-    </LinearLayout>
+            <ListView
+                android:id="@+id/journalList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true">
+
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationBottomView"
