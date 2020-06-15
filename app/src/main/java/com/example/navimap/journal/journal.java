@@ -349,7 +349,7 @@ public class journal extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
             if(requestCode == 0){
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                imageName = photo.save(bitmap,markerName);
+                imageName = photo.save(bitmap, markerName);
                 journal_image.setBackground(null);
                 journal_image.setImageBitmap(bitmap);
             }else if(requestCode == REQUEST_GALLERY) {

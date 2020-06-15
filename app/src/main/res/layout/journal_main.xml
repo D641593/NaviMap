@@ -7,30 +7,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".journal.journal"
+    app:layout_constraintBottom_toTopOf="@+id/navigationBottomView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="?attr/actionBarSize"
     android:fitsSystemWindows="true">
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/navigationBottomView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="?attr/actionBarSize">
-
-        <LinearLayout
+        android:orientation="vertical">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:layout_height="match_parent">
             <ListView
                 android:id="@+id/journalList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
+                android:layout_height="match_parent"/>
 
-            </ListView>
-        </LinearLayout>
-    </ScrollView>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationBottomView"

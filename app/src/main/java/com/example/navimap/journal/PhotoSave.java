@@ -65,7 +65,7 @@ public class PhotoSave extends FragmentActivity {
         String file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/AppCameraPhoto/" + pictureName;
         File filePath = new File(file);
         if (!filePath.exists()) {
-            filePath.mkdir();
+            filePath.mkdirs();
         }
 
         File finalImageFile = new File(filePath,  pictureName +"_"+ id + ".jpg");
@@ -85,6 +85,7 @@ public class PhotoSave extends FragmentActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         try {

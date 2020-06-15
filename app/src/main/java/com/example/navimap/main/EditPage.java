@@ -65,6 +65,10 @@ public class EditPage extends AppCompatActivity{
         DB = new tinyDB(this);
         notedb = new noteDB(this);
         editDB = new EditDB(this);
+//        SQLiteDatabase db = editDB.getWritableDatabase();
+//        editDB.onUpgrade(db,1,1);
+//        editDB.onCreate(db);
+//        db.close();
         CatchDB();
 
         getSupportActionBar().setTitle("旅遊企劃");
